@@ -367,7 +367,7 @@ index 51d434d..3bf613e 100644
      public final void method_66(Graphics var1, String var2, int var3, int var4, int var5) {
          int var6 = 0;
 diff --git a/class_9.java b/class_9.java
-index b252673..45cb3a3 100644
+index b252673..1d953ad 100644
 --- a/class_9.java
 +++ b/class_9.java
 @@ -681,6 +681,12 @@ public final class class_9 extends Canvas implements Runnable {
@@ -1160,7 +1160,7 @@ index b252673..45cb3a3 100644
          }
  
          if (this.field_162 > 0) {
-@@ -5573,16 +5846,30 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5573,16 +5846,47 @@ public final class class_9 extends Canvas implements Runnable {
              var5 = var14;
          }
  
@@ -1192,10 +1192,27 @@ index b252673..45cb3a3 100644
              int var8 = this.field_247 <= 1 ? 1 : 0;
 -            int var9 = field_337[8] > 4 ? -16 : -7;
 +            int var9 = (field_337[8] > 4 ? -16 : -7) + var17;
++            if (SW > 128) {
++                // [port] widescreen: the battery keeps its 4-cell left end and grows right, over the
++                // plain pipe (the phone moved it 9 px left, over the lives count, for 5 cells or more).
++                // Its housing follows it: the two clamp pieces (module 21: a pair of clamps each),
++                // at bar x -7 and 6 on the phone, sit at its left end and 13 px + extra cells in.
++                var9 = -7 + var17;
++                int var21 = var9 + 13 + (field_337[8] - 4) * var6[15].getWidth();
++                class_8 var22 = field_326[0];
++                int var26 = Math.max(var21 + 8, 16 + var17);  // to the left column group's end, at least
++                for (int var27 = var9; var27 < var26; var27 += 5) {
++                    var22.method_62(var2, 20, Math.min(var27, var26 - 5), -21, 0);  // plain pipe
++                }
++
++                var22.method_62(var2, 21, var9, -21, 0);
++                var22.method_62(var2, 21, var21, -21, 0);
++            }
++
              var2.drawImage(var6[11 + var8], var9, -15, 0);
              var7 = 0 + var6[11 + var8].getWidth();
              int var10 = var6[15].getWidth();
-@@ -5613,26 +5900,121 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5613,26 +5917,121 @@ public final class class_9 extends Canvas implements Runnable {
              this.field_415 = this.field_252;
              this.field_418 = this.field_162;
              if (this.field_162 > 0) {
@@ -1322,7 +1339,7 @@ index b252673..45cb3a3 100644
      // $VF: renamed from: aj () void
      private void method_170() {
          field_330 = field_326[6];
-@@ -5757,24 +6139,11 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5757,24 +6156,11 @@ public final class class_9 extends Canvas implements Runnable {
  
      // $VF: renamed from: an () void
      private void method_176() {
@@ -1351,7 +1368,7 @@ index b252673..45cb3a3 100644
              }
          }
      }
-@@ -5782,24 +6151,40 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5782,24 +6168,40 @@ public final class class_9 extends Canvas implements Runnable {
      // $VF: renamed from: c (int, int) void
      private void method_177(int var1, int var2) {
          if (field_230 == 4) {
@@ -1402,7 +1419,7 @@ index b252673..45cb3a3 100644
      }
  
      // $VF: renamed from: ao () void
-@@ -5818,14 +6203,34 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5818,14 +6220,34 @@ public final class class_9 extends Canvas implements Runnable {
          int var1;
          var1 = (var1 = 160 - (this.field_422 * 11 + 1 + 2)) + (!this.field_437 && this.field_271 == 0 ? 11 : 0);
          int var2 = 160;
@@ -1438,7 +1455,7 @@ index b252673..45cb3a3 100644
          if (field_230 == 7 || field_230 == 2) {
              int var3 = var1 - (80 - (160 - var1) / 2);
              var1 -= var3;
-@@ -5837,29 +6242,13 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5837,29 +6259,13 @@ public final class class_9 extends Canvas implements Runnable {
          }
  
          if (field_230 == 7) {
@@ -1472,7 +1489,7 @@ index b252673..45cb3a3 100644
          }
  
          long var17 = System.currentTimeMillis();
-@@ -5871,7 +6260,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5871,7 +6277,7 @@ public final class class_9 extends Canvas implements Runnable {
          if (this.field_432 != -1 && !field_433) {
              int var5 = this.field_271 == 0 && this.field_432 > 1 && !this.field_437 ? 11 : 0;
              int var6 = var1 + this.field_432 * 11 - var5;
@@ -1481,7 +1498,7 @@ index b252673..45cb3a3 100644
          }
  
          if (this.field_432 != this.field_273 || field_433) {
-@@ -5888,10 +6277,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5888,10 +6294,7 @@ public final class class_9 extends Canvas implements Runnable {
                      var7 -= 11;
                  }
  
@@ -1493,7 +1510,7 @@ index b252673..45cb3a3 100644
  
                  label182: {
                      Graphics var23;
-@@ -5905,9 +6291,9 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5905,9 +6308,9 @@ public final class class_9 extends Canvas implements Runnable {
                              if (var18 != this.field_273) {
                                  this.field_323.setColor(13421772);
                                  var23 = this.field_323;
@@ -1505,7 +1522,7 @@ index b252673..45cb3a3 100644
                                  var30 = 10;
                                  break label254;
                              }
-@@ -5925,9 +6311,9 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5925,9 +6328,9 @@ public final class class_9 extends Canvas implements Runnable {
  
                          var23.setColor(var26);
                          var23 = this.field_323;
@@ -1517,7 +1534,7 @@ index b252673..45cb3a3 100644
                          var30 = 12;
                      }
  
-@@ -5953,7 +6339,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5953,7 +6356,7 @@ public final class class_9 extends Canvas implements Runnable {
                  field_326[41].field_83 = var8;
                  field_326[41].method_65(this.field_323, field_568[field_565[this.field_271][var18 * 2 + 1]], 64 - var9 / 2 - var11, var7 + 1, 6);
                  if (var14) {
@@ -1526,7 +1543,7 @@ index b252673..45cb3a3 100644
                  }
  
                  if (var18 == this.field_273) {
-@@ -5989,7 +6375,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -5989,7 +6392,7 @@ public final class class_9 extends Canvas implements Runnable {
              this.field_427++;
          }
  
@@ -1535,7 +1552,7 @@ index b252673..45cb3a3 100644
          int var19;
          if (this.field_271 == 0 && method_369() && (var19 = this.field_421 % 20) >= 10) {
              int var21 = this.field_437 ? 2 : 1;
-@@ -6022,6 +6408,9 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6022,6 +6425,9 @@ public final class class_9 extends Canvas implements Runnable {
              field_434 = true;
              field_436 = false;
          }
@@ -1545,7 +1562,7 @@ index b252673..45cb3a3 100644
      }
  
      // $VF: renamed from: a () void
-@@ -6031,7 +6420,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6031,7 +6437,7 @@ public final class class_9 extends Canvas implements Runnable {
          }
  
          if (field_326[18] != null) {
@@ -1554,7 +1571,7 @@ index b252673..45cb3a3 100644
          }
      }
  
-@@ -6042,7 +6431,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6042,7 +6448,7 @@ public final class class_9 extends Canvas implements Runnable {
          }
  
          if (field_326[18] != null) {
@@ -1563,7 +1580,7 @@ index b252673..45cb3a3 100644
          }
      }
  
-@@ -6050,16 +6439,18 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6050,16 +6456,18 @@ public final class class_9 extends Canvas implements Runnable {
      private void method_182() {
          Graphics var1 = this.field_323;
          this.field_323.setColor(0);
@@ -1587,7 +1604,7 @@ index b252673..45cb3a3 100644
          field_326[41].field_83 = 0;
          field_326[41].method_65(this.field_323, field_568[37], 64, 136, 1);
      }
-@@ -6087,7 +6478,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6087,7 +6495,7 @@ public final class class_9 extends Canvas implements Runnable {
  
      // $VF: renamed from: as () void
      private void method_184() {
@@ -1596,7 +1613,7 @@ index b252673..45cb3a3 100644
              if (field_326[10] == null) {
                  field_326[10] = method_358("/mmv.f", 0);
              }
-@@ -6139,7 +6530,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6139,7 +6547,7 @@ public final class class_9 extends Canvas implements Runnable {
          }
  
          if (this.field_186 != 15) {
@@ -1605,7 +1622,7 @@ index b252673..45cb3a3 100644
                  class_3 var3;
                  (var3 = field_329[5]).field_19 = this.field_190 - this.field_207;
                  var3.field_20 = 336 - this.field_208;
-@@ -6195,7 +6586,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6195,7 +6603,7 @@ public final class class_9 extends Canvas implements Runnable {
      // $VF: renamed from: a (javax.microedition.lcdui.Graphics, int) void
      private void method_189(Graphics var1, int var2) {
          int var3 = var2 * 12 + 2;
@@ -1614,7 +1631,7 @@ index b252673..45cb3a3 100644
          if (this.field_188 > 0) {
              var1.setColor(0);
              var1.fillRect(var4, 5, var3, 12);
-@@ -6284,7 +6675,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6284,7 +6692,7 @@ public final class class_9 extends Canvas implements Runnable {
  
          for (int var7 = 0; var7 < 3; var7++) {
              int var6;
@@ -1623,7 +1640,7 @@ index b252673..45cb3a3 100644
                  field_326[40].method_60(var1, 1, var6, 144 - this.field_208, 0, 0, 0);
              }
          }
-@@ -6344,7 +6735,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6344,7 +6752,7 @@ public final class class_9 extends Canvas implements Runnable {
      private void method_192() {
          for (byte var1 = 3; var1 < 13; var1 += 2) {
              int var2;
@@ -1632,7 +1649,7 @@ index b252673..45cb3a3 100644
              int var4 = 160 / var2 * field_234 % 160;
              this.field_323.drawImage(field_324[27][var1 & 1], var3, var4, 0);
          }
-@@ -6352,6 +6743,11 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6352,6 +6760,11 @@ public final class class_9 extends Canvas implements Runnable {
  
      // $VF: renamed from: az () void
      private void method_193() {
@@ -1644,7 +1661,7 @@ index b252673..45cb3a3 100644
          if (this.field_195 && this.field_361 == null && this.field_266 == -1) {
              field_326[15].method_59(this.field_323, 0, field_234 >> 1 & 3, this.field_278, this.field_279 - 16, 0, 0, 0);
          }
-@@ -6363,7 +6759,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -6363,7 +6776,7 @@ public final class class_9 extends Canvas implements Runnable {
          int var3 = (field_234 << 3) % 160;
          int var2 = (field_234 / 160 & 1) == 0 ? 160 - var3 : 0 + var3;
          var1.setColor(255, var2, 0);
@@ -1653,7 +1670,7 @@ index b252673..45cb3a3 100644
      }
  
      // $VF: renamed from: aB () void
-@@ -7265,7 +7661,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -7265,7 +7678,7 @@ public final class class_9 extends Canvas implements Runnable {
      private void method_212() {
          class_3 var1 = field_329[0];
          this.field_323.setColor(0);
@@ -1662,7 +1679,7 @@ index b252673..45cb3a3 100644
          var1.field_20 = 54;
          int var3 = 0;
          if (field_234 > 16) {
-@@ -7694,7 +8090,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -7694,7 +8107,7 @@ public final class class_9 extends Canvas implements Runnable {
                                  this.field_274 = 5;
                                  field_230 = 9;
                                  this.method_72(-1);
@@ -1671,7 +1688,7 @@ index b252673..45cb3a3 100644
                                  this.method_223();
                              }
                              break;
-@@ -7990,7 +8386,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -7990,7 +8403,7 @@ public final class class_9 extends Canvas implements Runnable {
  
      // $VF: renamed from: ba () void
      private void method_230() {
@@ -1680,7 +1697,7 @@ index b252673..45cb3a3 100644
              this.field_204 = 5;
              field_337[3] = (byte)this.field_204;
              if (this.field_180 == 2) {
-@@ -8901,7 +9297,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -8901,7 +9314,7 @@ public final class class_9 extends Canvas implements Runnable {
  
          label420: {
              class_9 var28;
@@ -1689,7 +1706,7 @@ index b252673..45cb3a3 100644
              if (this.field_242 > 0) {
                  if (field_341[this.field_238][this.field_239] < 0) {
                      byte var35;
-@@ -9164,8 +9560,8 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -9164,8 +9577,8 @@ public final class class_9 extends Canvas implements Runnable {
                      this.field_208 = 0;
                  }
  
@@ -1700,7 +1717,7 @@ index b252673..45cb3a3 100644
                  }
              }
          }
-@@ -9215,7 +9611,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -9215,7 +9628,7 @@ public final class class_9 extends Canvas implements Runnable {
              return false;
          }
  
@@ -1709,7 +1726,7 @@ index b252673..45cb3a3 100644
              if (field_198[var2 + 2] == var1 && (field_198[var2 + 0] - 1 == var0 || field_198[var2 + 1] + 1 == var0)) {
                  return true;
              }
-@@ -9228,7 +9624,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -9228,7 +9641,7 @@ public final class class_9 extends Canvas implements Runnable {
      private void method_243() {
          int var1 = this.field_213 - 1;
  
@@ -1718,7 +1735,7 @@ index b252673..45cb3a3 100644
              byte var3;
              if ((var3 = field_198[var2 + 2]) > 0) {
                  byte var4 = field_198[var2 + 1];
-@@ -9302,7 +9698,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -9302,7 +9715,7 @@ public final class class_9 extends Canvas implements Runnable {
                      var2 = field_326[41];
                      var3 = this.field_323;
                      this.field_323.setColor(2496263);
@@ -1727,7 +1744,7 @@ index b252673..45cb3a3 100644
                      switch (var1) {
                          case 0:
                              break label106;
-@@ -9425,7 +9821,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -9425,7 +9838,7 @@ public final class class_9 extends Canvas implements Runnable {
              var2.method_65(var3, field_568[field_567[this.field_205][this.field_206]], 64, 10, 17);
          }
  
@@ -1736,7 +1753,7 @@ index b252673..45cb3a3 100644
      }
  
      // $VF: renamed from: a (byte[], int) int
-@@ -11370,12 +11766,131 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -11370,12 +11783,131 @@ public final class class_9 extends Canvas implements Runnable {
          }
      }
  
@@ -1869,7 +1886,7 @@ index b252673..45cb3a3 100644
          if ((this.field_241 & 2) != 0) {
              var2 += 16;
          } else if ((this.field_241 & 4) != 0) {
-@@ -11385,20 +11900,20 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -11385,20 +11917,20 @@ public final class class_9 extends Canvas implements Runnable {
          label72: {
              class_9 var10000;
              int var10001;
@@ -1896,7 +1913,7 @@ index b252673..45cb3a3 100644
                  if (this.field_211 <= var4) {
                      break label72;
                  }
-@@ -11437,10 +11952,10 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -11437,10 +11969,10 @@ public final class class_9 extends Canvas implements Runnable {
              class_9 var7;
              int var9;
              int var10002;
@@ -1909,7 +1926,7 @@ index b252673..45cb3a3 100644
              } else {
                  if (this.field_207 <= var4) {
                      break label58;
-@@ -11645,42 +12160,23 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -11645,42 +12177,23 @@ public final class class_9 extends Canvas implements Runnable {
                              break label326;
                          }
  
@@ -1967,7 +1984,7 @@ index b252673..45cb3a3 100644
                          break label326;
                      case 3:
                          if (field_339[var13][var14] >> 8 < 3) {
-@@ -12076,9 +12572,9 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -12076,9 +12589,9 @@ public final class class_9 extends Canvas implements Runnable {
  
                  if (this.field_361 != null && !field_374) {
                      this.field_323.setColor(0);
@@ -1980,7 +1997,7 @@ index b252673..45cb3a3 100644
                      return;
                  }
  
-@@ -12664,17 +13160,8 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -12664,17 +13177,8 @@ public final class class_9 extends Canvas implements Runnable {
                          this.field_333 |= 8388608L;
                          continue;
                      case 48:
@@ -2000,7 +2017,7 @@ index b252673..45cb3a3 100644
                          this.field_199++;
                          this.field_333 |= 1099511627776L;
                          this.field_333 |= 4294967296L;
-@@ -12694,7 +13181,8 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -12694,7 +13198,8 @@ public final class class_9 extends Canvas implements Runnable {
                          this.field_239 = var9;
                          this.field_201 = var8;
                          field_341[var8][var9] = -1;
@@ -2010,7 +2027,7 @@ index b252673..45cb3a3 100644
                          this.field_212 = this.field_208 = this.field_239 * 16 - 48;
                          continue;
                  }
-@@ -12972,10 +13460,10 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -12972,10 +13477,10 @@ public final class class_9 extends Canvas implements Runnable {
          label45: {
              var1 = false;
              var2 = false;
@@ -2025,7 +2042,7 @@ index b252673..45cb3a3 100644
              } else if (this.field_207 != this.field_346) {
                  break label45;
              }
-@@ -13273,7 +13761,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -13273,7 +13778,7 @@ public final class class_9 extends Canvas implements Runnable {
                          this.method_330();
                      }
  
@@ -2034,7 +2051,7 @@ index b252673..45cb3a3 100644
                      switch (field_341[this.field_288][this.field_289]) {
                          case 0:
                              this.method_355();
-@@ -13591,16 +14079,10 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -13591,16 +14096,10 @@ public final class class_9 extends Canvas implements Runnable {
                      }
  
                      field_342[var1][var3] = 12;
@@ -2053,7 +2070,7 @@ index b252673..45cb3a3 100644
              }
  
              byte var6 = field_341[var1][var2];
-@@ -13612,17 +14094,8 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -13612,17 +14111,8 @@ public final class class_9 extends Canvas implements Runnable {
              }
  
              if ((field_339[var1][var4] & 0xFF) != 35 && field_341[var1][var4] != 47) {
@@ -2073,7 +2090,7 @@ index b252673..45cb3a3 100644
              }
  
              field_343[var1][var3] = 16;
-@@ -13762,7 +14235,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -13762,7 +14252,7 @@ public final class class_9 extends Canvas implements Runnable {
                          || var7 != 1 && var7 != 3
                          || var3 < 0
                          || var3 > 3
@@ -2082,7 +2099,7 @@ index b252673..45cb3a3 100644
                              && (this.field_238 <= var1 || field_341[var1 + 1][var2] >= 0 || (var1 + 1) * 16 <= this.field_207)) {
                          label175: {
                              var4++;
-@@ -13832,7 +14305,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -13832,7 +14322,7 @@ public final class class_9 extends Canvas implements Runnable {
                                      var15 = this.field_238 < var1 ? 0 : 1;
                                      break;
                                  case 4:
@@ -2091,7 +2108,7 @@ index b252673..45cb3a3 100644
                              }
  
                              var3 = var15;
-@@ -15627,7 +16100,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -15627,7 +16117,7 @@ public final class class_9 extends Canvas implements Runnable {
              this.field_260 = 0;
              this.field_261 = 0;
              this.field_345 = true;
@@ -2100,7 +2117,7 @@ index b252673..45cb3a3 100644
              this.field_347 = this.field_303 * 16 - 80;
              this.field_265 = 0;
              int[] var10000;
-@@ -15831,6 +16304,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -15831,6 +16321,7 @@ public final class class_9 extends Canvas implements Runnable {
              label462: {
                  int var10001;
                  byte var10002;
@@ -2108,7 +2125,7 @@ index b252673..45cb3a3 100644
                  label435: {
                      if (var3 <= 0 && !var14) {
                          if (var11 == var7 && this.method_302(var1, var8) && method_313(var1, var8)) {
-@@ -16303,7 +16777,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -16303,7 +16794,7 @@ public final class class_9 extends Canvas implements Runnable {
  
      // $VF: renamed from: g () boolean
      private static boolean method_369() {
@@ -2117,7 +2134,7 @@ index b252673..45cb3a3 100644
      }
  
      // $VF: renamed from: a (java.io.InputStream) int
-@@ -17607,6 +18081,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -17607,6 +18098,7 @@ public final class class_9 extends Canvas implements Runnable {
              byte var10003;
              byte var10004;
              byte var10005;
@@ -2125,7 +2142,7 @@ index b252673..45cb3a3 100644
              label29: {
                  this.method_380(this.field_488, (byte)var5, (byte)45, (byte)2);
                  this.field_489 = var7;
-@@ -17676,6 +18151,10 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -17676,6 +18168,10 @@ public final class class_9 extends Canvas implements Runnable {
      private static void method_407(int var0) {
          try {
              field_327 = var0 <= 6 ? method_358("/tips.f", var0) : null;
@@ -2136,7 +2153,7 @@ index b252673..45cb3a3 100644
              ByteArrayInputStream var1;
              int var2 = (var1 = new ByteArrayInputStream(method_362("/tipst.f", 0))).read();
              var0 %= var2;
-@@ -17687,10 +18166,34 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -17687,10 +18183,34 @@ public final class class_9 extends Canvas implements Runnable {
              field_328 = new byte[var5 - var4];
              var1.read(field_328);
              var1.close();
@@ -2171,7 +2188,7 @@ index b252673..45cb3a3 100644
      // $VF: renamed from: ct () void
      private void method_408() {
          field_326[41].field_92 = 0;
-@@ -17700,9 +18203,9 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -17700,9 +18220,9 @@ public final class class_9 extends Canvas implements Runnable {
          this.field_396 = false;
          Graphics var3 = this.field_323;
          this.field_323.setColor(798521);
@@ -2183,7 +2200,7 @@ index b252673..45cb3a3 100644
          int var4 = 0;
          boolean var5 = true;
  
-@@ -17863,18 +18366,18 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -17863,18 +18383,18 @@ public final class class_9 extends Canvas implements Runnable {
                  label105: {
                      byte[] var10000;
                      if (var22 > 32) {
@@ -2209,7 +2226,7 @@ index b252673..45cb3a3 100644
                              continue;
                          }
  
-@@ -18665,7 +19168,7 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -18665,7 +19185,7 @@ public final class class_9 extends Canvas implements Runnable {
          byte var4;
          byte var5;
          label22: {
@@ -2218,7 +2235,7 @@ index b252673..45cb3a3 100644
              var1 = 0;
              var2 = 0;
              var3 = 0;
-@@ -18702,21 +19205,29 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -18702,21 +19222,29 @@ public final class class_9 extends Canvas implements Runnable {
          }
  
          this.field_323.setColor(var1);
@@ -2252,7 +2269,7 @@ index b252673..45cb3a3 100644
          if (field_326[17] != null) {
              field_326[17].method_60(this.field_323, 12, 5, 135, 0, 0, 0);
              field_326[17].method_60(this.field_323, 10, 82, 135, 0, 0, 0);
-@@ -19225,13 +19736,13 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -19225,13 +19753,13 @@ public final class class_9 extends Canvas implements Runnable {
                  this.field_561 = true;
              }
  
@@ -2269,7 +2286,32 @@ index b252673..45cb3a3 100644
                  method_364(field_326[41], field_568[72], 0);
                  field_326[41].method_65(this.field_323, field_568[72], 64, 2, 17);
                  method_433(this.field_323, 3, 23, 122, 66, 4273165, 0);
-@@ -19444,9 +19955,9 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -19360,6 +19888,24 @@ public final class class_9 extends Canvas implements Runnable {
+                     var8++;
+                 }
+ 
++                // [port] credit for the Vita port, after the copyright line ("(c) 2006 Gameloft") and
++                // its blank line
++                byte[] var9 = "PS VITA PORT:\r\nROHANKP1\r\n\r\n".getBytes();  // capitals: the font draws lowercase as small caps
++                int var10 = 0;
++                while (field_569[var10] != -87) {  // the copyright sign (0xA9)
++                    var10++;
++                }
++
++                while (field_569[var10] != 10 || field_569[var10 + 1] != 13) {  // end of its line
++                    var10++;
++                }
++
++                var10 += 3;  // past "\n\r\n": the blank line
++                byte[] var11 = new byte[field_569.length + var9.length];
++                System.arraycopy(field_569, 0, var11, 0, var10);
++                System.arraycopy(var9, 0, var11, var10, var9.length);
++                System.arraycopy(field_569, var10, var11, var10 + var9.length, field_569.length - var10);
++                field_569 = var11;
+                 this.field_231 = 2;
+                 return;
+             case 2:
+@@ -19444,9 +19990,9 @@ public final class class_9 extends Canvas implements Runnable {
          if (this.field_231 == 2) {
              Graphics var1 = this.field_323;
              this.field_323.setColor(0, 0, 0);
@@ -2281,7 +2323,7 @@ index b252673..45cb3a3 100644
              int var4 = this.field_564;
              int var5 = this.field_564;
              int var7 = 0;
-@@ -19467,8 +19978,8 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -19467,8 +20013,8 @@ public final class class_9 extends Canvas implements Runnable {
  
              for (int var8 = 6; var8 > 0; var8--) {
                  var1.setColor(0);
@@ -2292,7 +2334,7 @@ index b252673..45cb3a3 100644
                  var2 += var8 + 1;
              }
  
-@@ -19521,15 +20032,23 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -19521,15 +20067,23 @@ public final class class_9 extends Canvas implements Runnable {
              int var3 = class_8.field_90;
              int var4 = class_8.field_89;
              if (this.field_574 == -1) {
@@ -2319,7 +2361,7 @@ index b252673..45cb3a3 100644
              var1.method_66(this.field_323, this.field_573, this.field_574, this.field_575, 0);
              var1.field_92 = var2;
          }
-@@ -19547,7 +20066,13 @@ public final class class_9 extends Canvas implements Runnable {
+@@ -19547,7 +20101,13 @@ public final class class_9 extends Canvas implements Runnable {
          for (int var10 = 0; var10 <= var9.length(); var10++) {
              int var11 = 10;
              if (var10 < var9.length()) {
