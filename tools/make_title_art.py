@@ -22,6 +22,7 @@ W, H, PW = 282, 160, 128
 OX = (W - PW) // 2
 FADE = 24        # columns at each edge of the painting that blend into the sides
 SIDE_BLUR = 1.2  # how soft the sides are, at this size (the eased edge goes to this softness)
+LOGO_ROWS = 70   # the painting's rows holding the logo (kept crisp across the FADE columns)
 CORNER_RADIUS = 14  # start gate image's rounded corners, in its own pixels
 BORDER = 4          # width of startup.png's white border
 
@@ -54,6 +55,25 @@ for c in range(PW):
     a = min(e / (FADE / 2), 1.0)  # sides -> painting over the first half
     col = (1 - t) * soft[:, c] + t * phone[:, c]  # soft -> crisp painting
     out[:, OX + c] = (1 - a) * sides[:, OX + c] + a * col
+
+# the logo reaches into the FADE columns (its two Ds): it stays crisp, only the scenery around it
+# eases into the sides. Logo pixels: colours of the top LOGO_ROWS rows that the scenery below never
+# uses (the logo has its own palette), holes filled, grown 1 px to take in its dark outline.
+rgb = np.asarray(phone_im, dtype=np.int64)
+key = rgb[..., 0] << 16 | rgb[..., 1] << 8 | rgb[..., 2]
+logo = np.zeros((H, PW), bool)
+logo[:LOGO_ROWS] = np.isin(key[:LOGO_ROWS], np.setdiff1d(key[:LOGO_ROWS], key[LOGO_ROWS + 5:140]))
+outside = np.zeros_like(logo)  # flood fill of the non-logo pixels from the image border
+stack = [(y, x) for y in range(H) for x in (0, PW - 1)] + [(y, x) for x in range(PW) for y in (0, H - 1)]
+while stack:
+    y, x = stack.pop()
+    if 0 <= y < H and 0 <= x < PW and not logo[y, x] and not outside[y, x]:
+        outside[y, x] = True
+        stack += [(y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)]
+logo = ~outside
+grown = logo.copy()
+grown[1:] |= logo[:-1]; grown[:-1] |= logo[1:]; grown[:, 1:] |= logo[:, :-1]; grown[:, :-1] |= logo[:, 1:]
+out[:, OX:OX + PW][grown] = phone[grown]
 path = os.path.join(ROOT, "port", "res", "port_title_wide.png")
 menu_bg = Image.fromarray(out.clip(0, 255).round().astype(np.uint8))
 menu_bg.save(path)
