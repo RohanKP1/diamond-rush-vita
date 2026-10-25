@@ -337,7 +337,7 @@ index 51d434d..453c4f3 100644
      public final void method_66(Graphics var1, String var2, int var3, int var4, int var5) {
          int var6 = 0;
 diff --git a/class_9.java b/class_9.java
-index b252673..d00dbfb 100644
+index b252673..d1581af 100644
 --- a/class_9.java
 +++ b/class_9.java
 @@ -681,6 +681,12 @@ public final class class_9 extends Canvas implements Runnable {
@@ -1582,6 +1582,24 @@ index b252673..d00dbfb 100644
          var1.field_20 = 54;
          int var3 = 0;
          if (field_234 > 16) {
+@@ -7694,7 +8055,7 @@ public final class class_9 extends Canvas implements Runnable {
+                                 this.field_274 = 5;
+                                 field_230 = 9;
+                                 this.method_72(-1);
+-                            } else if (method_73(32)) {
++                            } else if (method_73(32816)) {  // [port] Vita cross (fire, 5) confirms too: was 32 (left soft key only)
+                                 this.method_223();
+                             }
+                             break;
+@@ -7990,7 +8351,7 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+     // $VF: renamed from: ba () void
+     private void method_230() {
+-        if (method_73(32)) {
++        if (method_73(32816)) {  // [port] Vita cross (fire, 5) confirms too: was 32 (left soft key only)
+             this.field_204 = 5;
+             field_337[3] = (byte)this.field_204;
+             if (this.field_180 == 2) {
 @@ -8901,7 +9262,7 @@ public final class class_9 extends Canvas implements Runnable {
  
          label420: {

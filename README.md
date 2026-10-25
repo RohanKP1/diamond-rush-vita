@@ -106,7 +106,8 @@ your .jar ──Vineflower──► java-src/ ──patches/java-src.patch──
 | `PLAN.md` | design notes and decisions |
 
 After changing anything in `java-src/`, run `.\tools\translate.ps1` and `wsl ./build.sh vita`.
-To update the patch from your edits, diff a fresh decompile against `java-src/`.
+To update the patch from your edits: `.\tools\decompile.ps1 -Out <empty folder>`, then
+`bash tools/make-patch.sh <that folder>` (it checks that the new patch reproduces `java-src/`).
 
 Testing helpers: `tools/port-probe.sh` runs the desktop build headless with a key script and
 saves screenshots. Environment variables: `DR_TRACE=1` (log caught exceptions and audio),
