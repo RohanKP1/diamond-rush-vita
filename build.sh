@@ -22,6 +22,18 @@ vita() {
   resources
   # LiveArea images: basic ones from the jar's icon unless port/sce_sys already has some
   [ -f port/sce_sys/icon0.png ] || python3 -I tools/make_default_livearea.py jar port/sce_sys
+  # the Vita refuses to install (VitaShell error 0x8010113D) if any of them isn't an 8-bit
+  # palette PNG: convert ones made elsewhere
+  python3 -I - port/sce_sys <<'EOF'
+import sys, pathlib
+from PIL import Image
+for p in sorted(pathlib.Path(sys.argv[1]).rglob("*.png")):
+    im = Image.open(p)
+    if im.mode != "P":
+        im.convert("RGB").quantize(colors=255, method=Image.Quantize.MEDIANCUT,
+                                   dither=Image.Dither.NONE).save(p)
+        print(f"{p}: {im.mode} -> 8-bit palette")
+EOF
   cmake -S port -B "$BUILD/vita" -G Ninja -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_TOOLCHAIN_FILE="$VITASDK/share/vita.toolchain.cmake"
   cmake --build "$BUILD/vita"
