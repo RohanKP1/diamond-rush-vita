@@ -1,0 +1,2238 @@
+diff --git a/class_6.java b/class_6.java
+index c8866da..450f6f2 100644
+--- a/class_6.java
++++ b/class_6.java
+@@ -72,7 +72,7 @@ public final class class_6 {
+                     }
+ 
+                     label126: {
+-                        var29 = (short)(var29 - 56);
++                        var29 = (short)(var29 - ((class_9.SW >> 1) - 8));  // [port] centre target: was - 56
+                         var32 = (short)(var32 - 61);
+                         this.field_59.field_211 = (short)((var29 * var45 + var35 * (var41 - var45)) / var41);
+                         this.field_59.field_212 = (short)((var32 * var45 + var37 * (var41 - var45)) / var41);
+@@ -114,7 +114,7 @@ public final class class_6 {
+                     int var19;
+                     int var20;
+                     label114: {
+-                        var19 = this.field_59.field_213 * 16 - 128;
++                        var19 = this.field_59.camMaxX();  // [port] was field_213 * 16 - 128
+                         var20 = this.field_59.field_214 * 16 - 160 + 21;
+                         class_9 var51;
+                         int var55;
+@@ -122,12 +122,12 @@ public final class class_6 {
+                             var51 = this.field_59;
+                             var55 = var19;
+                         } else {
+-                            if (this.field_59.field_211 >= 0) {
++                            if (this.field_59.field_211 >= this.field_59.camMinX()) {  // [port] was 0
+                                 break label114;
+                             }
+ 
+                             var51 = this.field_59;
+-                            var55 = 0;
++                            var55 = this.field_59.camMinX();
+                         }
+ 
+                         var51.field_211 = var55;
+@@ -160,7 +160,7 @@ public final class class_6 {
+                             var53 = this.field_59;
+                             var57 = this.field_59.field_207 - (var19 - this.field_59.field_209);
+                         } else {
+-                            if (this.field_59.field_207 >= 0) {
++                            if (this.field_59.field_207 >= this.field_59.camMinX()) {  // [port] was 0
+                                 break label102;
+                             }
+ 
+@@ -192,21 +192,29 @@ public final class class_6 {
+                     int var23 = var2[var3 + 8] & 255;
+                     int var48 = var2[var3 + 9] & 255;
+                     int var24 = var23 * class_9.method_365(class_9.field_326[41]) + 4 - 2;
++                    if (class_9.SW > 128) {
++                        // [port] widescreen: the text box sits in the top letterbox bar, right of the
++                        // portrait (top-left corner) and of its reaction icon ("!", sweat...: drawn at
++                        // portrait + 50, up to ~30 px wide) when one is shown, else in the corner itself
++                        var38 = (short)(-class_9.OX + (this.field_52 ? 94 : 4));
++                        var39 = 2;
++                    }
++
+                     class_9.method_433(var1, var38, var39, 114, var24, 73, 0);
+                     String var49 = null;
+ 
+                     try {
+-                        var49 = new String(var2, var3 + 11, (short)class_9.method_247(var2, var3 + 2), "ISO-8859-1");
++                        var49 = class_9.portKeys(new String(var2, var3 + 11, (short)class_9.method_247(var2, var3 + 2), "ISO-8859-1"));
+                     } catch (Exception var26) {
+                     }
+ 
+                     this.method_46(var49, 110);
+                     this.method_45(var1, var49, var38 + 2, var39 + 2, var48, var48 + var23);
+                     if (this.field_51 / 2 % 2 == 0) {
+-                        var1.drawImage(class_9.field_325[0][9], var38 + 114 - 10, var39 + var24, 17);
++                        class_8.drawGlyph(var1, 57344, var38 + 114 - 10 - 4, var39 + var24);  // [port] Vita cross: was the phone's 5-key image
+                     }
+ 
+-                    var1.setClip(0, 0, 128, 160);
++                    var1.setClip(-class_9.OX, 0, class_9.SW, 160);
+                     break;
+                 case 4:
+                     int var44 = this.field_51;
+@@ -234,8 +242,8 @@ public final class class_6 {
+ 
+                     int var15 = this.field_59.field_238 * 16;
+                     int var16 = this.field_59.field_239 * 16;
+-                    int var46 = this.field_53;
+-                    int var47 = this.field_54;
++                    int var46 = this.headX();  // [port] was field_53/field_54
++                    int var47 = this.headY();
+                     var1.fillRect(
+                         ((var15 - this.field_59.field_207) * (5 - var43) + var46 * var43) / 5,
+                         ((var16 - this.field_59.field_208) * (5 - var43) + var47 * var43) / 5,
+@@ -266,7 +274,7 @@ public final class class_6 {
+                     if (var2[var3 + 7] != 0) {
+                         int var14 = (var2[var3 + 3] & 255) + ((var2[var3 + 3 + 1] & 255) << 8) + ((var2[var3 + 3 + 2] & 255) << 16);
+                         var1.setColor(var14);
+-                        var1.fillRect(0, 0, 128, 160);
++                        var1.fillRect(-class_9.OX, 0, class_9.SW, 160);
+                         return;
+                     }
+                     break;
+@@ -277,7 +285,7 @@ public final class class_6 {
+                     String var22 = null;
+ 
+                     try {
+-                        var22 = new String(var2, var3 + 8, (short)class_9.method_247(var2, var3 + 2), "ISO-8859-1");
++                        var22 = class_9.portKeys(new String(var2, var3 + 8, (short)class_9.method_247(var2, var3 + 2), "ISO-8859-1"));
+                     } catch (Exception var27) {
+                     }
+ 
+@@ -285,7 +293,7 @@ public final class class_6 {
+                     this.method_45(var1, var22, 20, 98, var21, var21 + 2);
+                     class_9.field_326[41].method_65(var1, class_9.field_568[70], 22, 81, 20);
+                     if ((class_9.field_235 << 1) % 2 == 0) {
+-                        var1.drawImage(class_9.field_325[0][9], 112, 87, 17);
++                        class_8.drawGlyph(var1, 57344, 108, 87);  // [port] Vita cross: was the phone's 5-key image
+                         return;
+                     }
+             }
+@@ -300,7 +308,7 @@ public final class class_6 {
+                 String var10 = null;
+ 
+                 try {
+-                    var10 = new String(var1, var2 + 11, (short)class_9.method_247(var1, var2 + 2), "ISO-8859-1");
++                    var10 = class_9.portKeys(new String(var1, var2 + 11, (short)class_9.method_247(var1, var2 + 2), "ISO-8859-1"));
+                 } catch (Exception var9) {
+                 }
+ 
+@@ -331,7 +339,7 @@ public final class class_6 {
+                     String var4 = null;
+ 
+                     try {
+-                        var4 = new String(var1, var2 + 8, (short)class_9.method_247(var1, var2 + 2), "ISO-8859-1");
++                        var4 = class_9.portKeys(new String(var1, var2 + 8, (short)class_9.method_247(var1, var2 + 2), "ISO-8859-1"));
+                     } catch (Exception var8) {
+                     }
+ 
+@@ -378,10 +386,11 @@ public final class class_6 {
+                     }
+                     break;
+                 default:
++                    // [port] cutscene bars span the screen; "Skip" sits at its left edge
+                     var1.setColor(0);
+-                    var1.fillRect(0, 0, 128, 30);
+-                    var1.fillRect(0, 130, 128, 30);
+-                    class_9.field_326[41].method_65(var1, class_9.field_568[53], 0, 156, 36);
++                    var1.fillRect(-class_9.OX, 0, class_9.SW, 30);
++                    var1.fillRect(-class_9.OX, 130, class_9.SW, 30);
++                    class_9.field_326[41].method_65(var1, class_9.field_568[53], -class_9.OX, 156, 36);
+             }
+ 
+             if (this.field_50[0] == 0) {
+@@ -398,17 +407,29 @@ public final class class_6 {
+             }
+ 
+             if (this.field_52) {
++                int var6 = this.headX();  // [port] was field_53/field_54
++                int var7 = this.headY();
+                 var1.setColor(0);
+-                var1.fillRect(this.field_53 - 3, this.field_54 - 3, 62, 33);
+-                field_46[this.field_56].method_59(var1, 0, this.field_51 % field_46[this.field_56].method_56(0), this.field_53, this.field_54, 0, 0, 0);
+-                field_46[0].method_60(var1, this.field_55, this.field_53 + 0, this.field_54, 0, 0, 0);
++                var1.fillRect(var6 - 3, var7 - 3, 62, 33);
++                field_46[this.field_56].method_59(var1, 0, this.field_51 % field_46[this.field_56].method_56(0), var6, var7, 0, 0, 0);
++                field_46[0].method_60(var1, this.field_55, var6 + 0, var7, 0, 0, 0);
+                 if (this.field_57 >= 0) {
+-                    field_46[1].method_60(var1, this.field_57, this.field_53 + 50, this.field_54 + -6, 0, 0, 0);
++                    field_46[1].method_60(var1, this.field_57, var6 + 50, var7 + -6, 0, 0, 0);
+                 }
+             }
+         }
+     }
+ 
++    // [port] portrait box position (top-left of the portrait; the box is 3 px larger). Widescreen
++    // puts it in the screen's top-left corner, beside the text box; the phone layout is scripted.
++    private int headX() {
++        return class_9.SW > 128 ? -class_9.OX + 7 : this.field_53;
++    }
++
++    private int headY() {
++        return class_9.SW > 128 ? 6 : this.field_54;
++    }
++
+     // $VF: renamed from: a () byte[]
+     public final byte[] method_36() {
+         this.method_38(this.field_47);
+@@ -1089,7 +1110,9 @@ public final class class_6 {
+         for (int var6 = 0; var6 < var3; var6++) {
+             label60: {
+                 char var7;
+-                if ((var7 = var1.charAt(var6)) > ' ') {
++                if ((var7 = var1.charAt(var6)) >= 57344) {
++                    var4 += 9 + class_9.field_326[41].field_76[1];  // [port] Vita button glyph
++                } else if (var7 > ' ') {
+                     int var8 = class_8.field_91[var7] & 255;
+                     int var12 = (class_9.field_326[41].field_76[var8 << 2] & 255) << 1;
+                     var4 += (class_9.field_326[41].field_72[var12] & 255) - class_9.field_326[41].field_76[(var8 << 2) + 1] + class_9.field_326[41].field_76[1];
+diff --git a/class_8.java b/class_8.java
+index 51d434d..453c4f3 100644
+--- a/class_8.java
++++ b/class_8.java
+@@ -56,15 +56,12 @@ public final class class_8 {
+     public final void method_52(byte[] var1, int var2) {
+         try {
+             System.gc();
+-            var2++;
++            // [port] increments rewritten from bytecode (decompiler emitted `(++var2)++`)
++            var2 += 2;
+             boolean var3 = false;
+-            var2++;
+-            var2++;
+-            var2++;
+-            int var10001 = ++var2;
+-            var2++;
++            var2 += 4;
+             short var5;
+-            if ((var5 = (short)((var1[var10001] & 255) + ((var1[(++var2)++] & 255) << 8))) > 0) {
++            if ((var5 = (short)((var1[var2++] & 255) + ((var1[var2++] & 255) << 8))) > 0) {
+                 this.field_72 = new byte[var5 << 1];
+                 System.arraycopy(var1, var2, this.field_72, 0, this.field_72.length);
+                 var2 += this.field_72.length;
+@@ -340,6 +337,11 @@ public final class class_8 {
+ 
+     // $VF: renamed from: a (javax.microedition.lcdui.Graphics, int, int, int, int, int, int) void
+     public final void method_60(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
++        if (this.portDpadKeys && var5 == 0) {
++            this.drawDpadFrame(var1, var2, var3, var4);
++            return;
++        }
++
+         int var8 = this.field_73[var2] & 255;
+ 
+         for (int var9 = 0; var9 < var8; var9++) {
+@@ -535,7 +537,11 @@ public final class class_8 {
+             int var11;
+             label69: {
+                 char var6;
+-                if ((var6 = var1.charAt(var5)) > 32) {
++                if ((var6 = var1.charAt(var5)) >= 57344) {  // [port] Vita button glyph (U+E000..)
++                    var10 = var2;
++                    var11 = 9;
++                    break label69;
++                } else if (var6 > 32) {
+                     var10 = field_91[var6] & 255;
+                 } else {
+                     if (var6 == 32) {
+@@ -566,7 +572,7 @@ public final class class_8 {
+                     var10 = var1.charAt(++var5);
+                 }
+ 
+-                var6 = var10;
++                var6 = (char)var10;  // [port] cast added; value is 0..65535
+                 int var10002;
+                 if (var10 >= this.method_57(0)) {
+                     int var7 = var6 - this.method_57(0);
+@@ -647,7 +653,12 @@ public final class class_8 {
+             int var22;
+             label81: {
+                 char var12;
+-                if ((var12 = var2.charAt(var11)) > 32) {
++                if ((var12 = var2.charAt(var11)) >= 57344) {  // [port] Vita button glyph (U+E000..)
++                    drawGlyph(var1, this, var12, var6, var7);
++                    var19 = var6;
++                    var22 = 9;
++                    break label81;
++                } else if (var12 > 32) {
+                     var19 = field_91[var12] & 255;
+                 } else {
+                     if (var12 == 32) {
+@@ -674,7 +685,7 @@ public final class class_8 {
+                     var19 = var2.charAt(++var11);
+                 }
+ 
+-                var12 = var19;
++                var12 = (char)var19;  // [port] cast added; value is 0..65535
+                 int var10002;
+                 if (var19 >= this.method_57(0)) {
+                     int var13 = var12 - this.method_57(0);
+@@ -699,6 +710,61 @@ public final class class_8 {
+         this.field_83 = var8;
+     }
+ 
++    // [port] The movement tip (tips.f sprite 0) draws phone keys as module 0 (a key showing "2")
++    // plus a digit overlay at +2,+2: module 1 = "4", 3 = "6", 4 = "8". With portDpadKeys set,
++    // frames draw the matching Vita d-pad glyph for each key instead.
++    public boolean portDpadKeys;
++
++    private void drawDpadFrame(Graphics var1, int var2, int var3, int var4) {
++        int var5 = this.field_73[var2] & 255;
++
++        for (int var6 = 0; var6 < var5; var6++) {
++            int var7 = this.field_74[var2] + var6 << 2;
++            int var8 = this.field_76[var7] & 255;
++            if (var8 == 0) {
++                int var9 = 57350;  // up ("2")
++
++                for (int var10 = 0; var10 < var5; var10++) {
++                    int var11 = this.field_74[var2] + var10 << 2;
++                    int var12 = this.field_76[var11] & 255;
++                    if (var12 >= 1 && var12 <= 4 && this.field_76[var11 + 1] == this.field_76[var7 + 1] + 2 && this.field_76[var11 + 2] == this.field_76[var7 + 2] + 2) {
++                        var9 = var12 == 1 ? 57348 : (var12 == 3 ? 57349 : (var12 == 4 ? 57351 : 57350));
++                    }
++                }
++
++                drawGlyph(var1, var9, var3 + this.field_76[var7 + 1], var4 + this.field_76[var7 + 2]);
++            } else if (var8 > 4) {
++                this.method_61(var1, var2, var6, var3, var4, 0);
++            }
++        }
++    }
++
++    // [port] Vita button glyphs: char U+E000 + i draws icon i of /port_btn.png (9x9 cells):
++    // 0 cross, 1 circle, 2 triangle, 3 square, 4-7 d-pad left/right/up/down, 8 L, 9 R.
++    // (x, y) is the text cell's top-left as passed to the font's glyph drawing; the icon is
++    // centred on the font's line height.
++    private static Image portGlyphs;
++
++    public static void drawGlyph(Graphics var0, class_8 var1, int var2, int var3, int var4) {
++        // centred on the capitals: the font's 'A' module (frame 0) gives their top and height
++        int var5 = var1.field_74[0] + (field_91[65] & 255) << 2;
++        int var6 = var1.field_72[((var1.field_76[var5] & 255) << 1) + 1] & 255;
++        drawGlyph(var0, var2, var3, var4 + var1.field_76[var5 + 2] + (var6 - 9 >> 1));
++    }
++
++    // [port] glyph var1 (char code) with its top-left at (var2, var3)
++    public static void drawGlyph(Graphics var0, int var1, int var2, int var3) {
++        if (portGlyphs == null) {
++            try {
++                portGlyphs = Image.createImage("/port_btn.png");
++            } catch (Exception var5) {
++                return;
++            }
++        }
++
++        var0.drawRegion(portGlyphs, (var1 - 57344) * 9, 0, 9, 9, 0, var2, var3, 20);
++    }
++
+     // $VF: renamed from: b (javax.microedition.lcdui.Graphics, java.lang.String, int, int, int) void
+     public final void method_66(Graphics var1, String var2, int var3, int var4, int var5) {
+         int var6 = 0;
+diff --git a/class_9.java b/class_9.java
+index b252673..d00dbfb 100644
+--- a/class_9.java
++++ b/class_9.java
+@@ -681,6 +681,12 @@ public final class class_9 extends Canvas implements Runnable {
+     public int field_432 = -1;
+     // $VF: renamed from: U boolean
+     public static boolean field_433 = false;
++    // [port] screen width: 128 on the phone, wider in widescreen mode (see paint()).
++    public static int SW = 128;
++    // [port] left edge of the screen in current drawing coordinates is -OX: 128-wide screens are
++    // drawn translated by OX = (SW - 128) / 2, so full-width elements span (-OX .. SW - OX).
++    public static int OX = 0;
++    private static int lastPaintState = -1;
+     // $VF: renamed from: V boolean
+     public static boolean field_434 = true;
+     // $VF: renamed from: k long
+@@ -945,12 +951,12 @@ public final class class_9 extends Canvas implements Runnable {
+     public int field_564;
+     // $VF: renamed from: a short[][]
+     public static final short[][] field_565 = new short[][]{
+-        {0, 0, 1, 1, 6, 3, 2, 2, 3, 4, 4, 5, 5, 6},
++        {0, 0, 1, 1, 2, 2, 3, 4, 4, 5, 5, 6},  // [port] removed {6, 3} MORE GAMES!
+         {0, 25, 1, 26, 2, 2, 3, 4, 4, 49, 6, 27, 5, 6},
+         {0, 28, 1, 29, 2, 30, 3, 31},
+         {0, 32, 1, 33},
+         {0, 45, 1, 46},
+-        {0, 33, 1, 50},
++        {0, 33, 1, 115, 2, 117},  // [port] item 1: DISPLAY (strings 115/116) instead of VIB. ON/OFF (50); item 2: SCALE (117/118)
+         {0, 101, 1, 100}
+     };
+     // $VF: renamed from: d int[]
+@@ -1105,15 +1111,13 @@ public final class class_9 extends Canvas implements Runnable {
+     }
+ 
+     public final void keyPressed(int var1) {
+-        Object var2 = null;
+         var1 = GloftDIRU.minisoyoKeyConvert(var1);
+-        var2 = method_371(var1);
++        int var2 = method_371(var1);
+         field_174 |= var2;
+         this.field_102 = false;
+     }
+ 
+     public final void keyReleased(int var1) {
+-        Object var2 = null;
+         var1 = GloftDIRU.minisoyoKeyConvert(var1);
+         field_174 = field_174 & ~method_371(var1);
+         this.field_102 = true;
+@@ -1259,6 +1263,19 @@ public final class class_9 extends Canvas implements Runnable {
+                 }
+ 
+                 field_568 = method_86("/lang.f", 115);
++                // [port] strings 115/116: the DISPLAY option that replaces vibration
++                String[] portStrings = new String[119];
++                System.arraycopy(field_568, 0, portStrings, 0, 115);
++                portStrings[115] = "DISPLAY: WIDE";
++                portStrings[116] = "DISPLAY: ORIGINAL";
++                portStrings[117] = "SCALE: FULL";
++                portStrings[118] = "SCALE: PIXEL";
++                // [port] soft-left labels in the bottom-left corner: Vita triangle in front
++                portStrings[53] = "\ue002 " + portStrings[53];  // Skip
++                portStrings[98] = "\ue002 " + portStrings[98];  // Continue
++                field_568 = portStrings;
++                method_436(5, 1, (short)(portWidescreen() ? 115 : 116));
++                method_436(5, 2, (short)(portScalePixel() ? 118 : 117));
+                 method_446();
+                 field_326[18] = method_358("/ui.f", 3);
+                 this.field_426 = field_326[18].field_75[2] & 255;
+@@ -1281,6 +1298,11 @@ public final class class_9 extends Canvas implements Runnable {
+             case 9:
+                 try {
+                     this.method_118();
++                    if (!portUnlocked && "1".equals(field_365.getAppProperty("Port-Debug-Unlock"))) {
++                        portUnlocked = true;
++                        this.portDebugUnlock();  // [port] test hook (DR_UNLOCK=1)
++                    }
++
+                     int var1 = this.field_274 == 5 ? this.field_275 : this.field_275 - 24;
+                     this.method_173(var1);
+                     var1++;
+@@ -1951,6 +1973,35 @@ public final class class_9 extends Canvas implements Runnable {
+     }
+ 
+     // $VF: renamed from: a (java.lang.String, int) java.lang.String[]
++    // [port] phone keys named in game text -> Vita button glyphs (drawn by class_8, chars U+E000..)
++    private static final String[] PORT_KEYS = new String[]{
++        "PRESS 5", "PRESS \ue000",
++        "Press 5", "Press \ue000",
++        "press 5", "press \ue000",
++        "pressing 5", "pressing \ue000",
++        "Press *", "Press \ue003",
++        "press *", "press \ue003",
++        "Press 4 or 6", "Press \ue004 or \ue005",
++        "Press 2 or 8", "Press \ue006 or \ue007",
++        "4, 6 to", "\ue004 \ue005 to",
++        "2, 8 to", "\ue006 \ue007 to"
++    };
++
++    public static String portKeys(String var0) {
++        if (var0 == null) {
++            return null;
++        }
++
++        for (int var1 = 0; var1 < PORT_KEYS.length; var1 += 2) {
++            int var2;
++            while ((var2 = var0.indexOf(PORT_KEYS[var1], 0)) >= 0) {
++                var0 = var0.substring(0, var2) + PORT_KEYS[var1 + 1] + var0.substring(var2 + PORT_KEYS[var1].length(), var0.length());
++            }
++        }
++
++        return var0;
++    }
++
+     public static String[] method_86(String var0, int var1) {
+         byte[] var2 = method_362(var0, 0);
+         int var3 = 0;
+@@ -1961,7 +2012,7 @@ public final class class_9 extends Canvas implements Runnable {
+         while (var5 < var1) {
+             if (var2[var3 + var4] == 0) {
+                 try {
+-                    var6[var5] = new String(var2, var3, var4, "ISO-8859-1");
++                    var6[var5] = portKeys(new String(var2, var3, var4, "ISO-8859-1"));  // [port] Vita buttons
+                 } catch (Exception var8) {
+                     var8.printStackTrace();
+                 }
+@@ -2348,16 +2399,18 @@ public final class class_9 extends Canvas implements Runnable {
+                 var10002 = field_388;
+                 break;
+             case 1:
+-                field_171 = !field_171;
+-                byte var1 = 51;
+-                if (field_171) {
+-                    var1 = 50;
+-                    method_266(200);
+-                }
+-
++                // [port] DISPLAY: WIDE / ORIGINAL (the Vita has no vibration). The host does the switch.
++                field_365.platformRequest("port:toggle-widescreen");
+                 var10000 = 5;
+                 var10001 = 1;
+-                var10002 = var1;
++                var10002 = (short)(portWidescreen() ? 115 : 116);
++                break;
++            case 2:
++                // [port] SCALE: FULL (fill the screen) / PIXEL (whole-pixel 3x). The host does the switch.
++                field_365.platformRequest("port:toggle-scale");
++                var10000 = 5;
++                var10001 = 2;
++                var10002 = (short)(portScalePixel() ? 118 : 117);
+                 break;
+             default:
+                 return;
+@@ -3347,7 +3400,8 @@ public final class class_9 extends Canvas implements Runnable {
+                     this.method_411();
+                     this.field_390 += var6 << 1;
+ 
+-                    label90:
++                    // [port] loop structure rebuilt: the decompiler put the per-section tail
++                    // after a `continue` inside the row-counting while loop
+                     for (int var7 = 0; var7 < var6; var7++) {
+                         int var8 = this.field_390;
+                         field_337[var5 + 3 + var7 * 2] = (byte)(var8 & 0xFF);
+@@ -3368,32 +3422,29 @@ public final class class_9 extends Canvas implements Runnable {
+                             }
+ 
+                             var14++;
+-                            continue;
++                        }
+ 
+-                            field_337[0] = (byte)(field_337[0] + var10);
+-                            field_337[this.field_390++] = 0;
+-                            field_337[this.field_390++] = var10;
+-                            field_337[this.field_390++] = 0;
+-                            this.field_315.skip(var11 * var12);
+-                            var14 = this.field_390;
+-                            this.field_390 += 2;
+-                            this.field_315.read(var13);
+-
+-                            for (int var15 = 0; var15 < var12; var15++) {
+-                                for (int var16 = 0; var16 < var11; var16++) {
+-                                    if (var13[var16 + var15 * var11] == 14 || var13[var16 + var15 * var11] == 33) {
+-                                        field_337[this.field_390++] = (byte)var16;
+-                                        field_337[this.field_390++] = (byte)var15;
+-                                        var9++;
+-                                    }
++                        field_337[0] = (byte)(field_337[0] + var10);
++                        field_337[this.field_390++] = 0;
++                        field_337[this.field_390++] = var10;
++                        field_337[this.field_390++] = 0;
++                        this.field_315.skip(var11 * var12);
++                        var14 = this.field_390;
++                        this.field_390 += 2;
++                        this.field_315.read(var13);
++
++                        for (int var15 = 0; var15 < var12; var15++) {
++                            for (int var16 = 0; var16 < var11; var16++) {
++                                if (var13[var16 + var15 * var11] == 14 || var13[var16 + var15 * var11] == 33) {
++                                    field_337[this.field_390++] = (byte)var16;
++                                    field_337[this.field_390++] = (byte)var15;
++                                    var9++;
+                                 }
+                             }
+-
+-                            field_337[var14] = 0;
+-                            field_337[var14 + 1] = var9;
+-                            continue label90;
+                         }
+-                        break;
++
++                        field_337[var14] = 0;
++                        field_337[var14 + 1] = var9;
+                     }
+ 
+                     this.field_315.close();
+@@ -3725,9 +3776,46 @@ public final class class_9 extends Canvas implements Runnable {
+     }
+ 
+     public final void paint(Graphics var1) {
++        // [port] widescreen: SW follows the canvas width (128 on the phone, wider on the Vita).
++        // Gameplay (state 1) and the pause menu's backdrop (state 2) render SW wide; every other
++        // screen is drawn into a centered 128-pixel column with black side bars.
++        int w = this.getWidth();
++        if (w < 128) {
++            w = 128;
++        }
++
++        if (w != SW) {
++            SW = w;
++            this.field_176 = true;
++            field_433 = true;
++            field_434 = true;
++            method_436(5, 1, (short)(portWidescreen() ? 115 : 116));
++        }
++
++        int ox = SW - 128 >> 1;
++        boolean centered = ox > 0 && field_230 != 1 && field_230 != 2;
++        var1.translate(-var1.getTranslateX(), -var1.getTranslateY());
++        OX = 0;
++        if (centered) {
++            if (field_230 != lastPaintState) {
++                // entering a screen: clear leftovers beside the 128 column (screens that need the
++                // full width draw it themselves via OX/SW; some only redraw what changes)
++                var1.setClip(0, 0, SW, 160);
++                var1.setColor(0);
++                var1.fillRect(0, 0, ox, 160);
++                var1.fillRect(ox + 128, 0, SW - 128 - ox, 160);
++                this.field_561 = true;  // screens that paint once (store, maps, help) repaint the sides
++            }
++
++            var1.translate(ox, 0);
++            OX = ox;
++        }
++
++        lastPaintState = field_230;
++
+         try {
+             this.field_323 = var1;
+-            this.field_323.setClip(0, 0, 128, 160);
++            this.field_323.setClip(-OX, 0, SW, 160);
+             switch (field_230) {
+                 case 0:
+                 case 3:
+@@ -3751,9 +3839,9 @@ public final class class_9 extends Canvas implements Runnable {
+                     break;
+                 case 5:
+                     if (!this.field_396) {
+-                        this.field_323.setClip(0, 136, 128, 24);
++                        this.field_323.setClip(-OX, 136, SW, 24);  // [port] was (0, 136, 128, 24)
+                         this.method_182();
+-                        this.field_323.setClip(0, 0, 128, 160);
++                        this.field_323.setClip(-OX, 0, SW, 160);
+                     } else {
+                         this.method_182();
+                     }
+@@ -3827,7 +3915,7 @@ public final class class_9 extends Canvas implements Runnable {
+                     if (this.field_395 && this.field_437) {
+                         this.field_395 = false;
+                         this.field_323.setColor(0);
+-                        this.field_323.fillRect(0, 0, 128, 160);
++                        this.field_323.fillRect(-OX, 0, SW, 160);
+                         field_326[41].field_92 = 5;
+                         field_326[41].method_66(this.field_323, method_445(field_568[this.field_391 ? 69 : 68], 108), 64, 80, 3);
+                         this.method_180();
+@@ -3846,6 +3934,8 @@ public final class class_9 extends Canvas implements Runnable {
+             System.out.println("Exception in paint: " + var3);
+             var3.printStackTrace();
+         }
++
++        var1.translate(-var1.getTranslateX(), -var1.getTranslateY());  // [port]
+     }
+ 
+     // $VF: renamed from: O () void
+@@ -3857,8 +3947,8 @@ public final class class_9 extends Canvas implements Runnable {
+             field_568[4] = method_445(field_568[4], 108);
+             field_568[106] = method_445(field_568[106], 108);
+             this.field_323.setColor(0);
+-            this.field_323.setClip(0, 0, 128, 160);
+-            this.field_323.fillRect(0, 0, 128, 160);
++            this.field_323.setClip(-OX, 0, SW, 160);
++            this.field_323.fillRect(-OX, 0, SW, 160);
+             var1.method_66(this.field_323, field_568[4], 64, 3, 17);
+             var1.field_92 = 0;
+             var1.method_64(field_568[103]);
+@@ -3883,7 +3973,7 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+     // $VF: renamed from: a (javax.microedition.lcdui.Graphics, boolean, int, int) void
+     private void method_142(Graphics var1, boolean var2, int var3, int var4) {
+-        var1.setClip(0, 0, 128, 160);
++        var1.setClip(-OX, 0, SW, 160);
+         byte var5 = 0;
+         byte var6 = 0;
+         if (var3 != 0 || var4 != 0) {
+@@ -3891,11 +3981,13 @@ public final class class_9 extends Canvas implements Runnable {
+             var6 -= 16;
+         }
+ 
+-        byte var9 = var6;
++        int var9 = var6;  // [port] was byte: var9 += 16 wrapped at 128, so "var9 < 160" never ended
+         boolean var10 = false;
+ 
++        // [port] tiles cover the full width (-OX .. SW - OX): was x var5..128 (byte counters)
++        int var15 = var5 - (OX + 15) / 16 * 16;
+         while (var9 < 160) {
+-            for (byte var11 = var5; var11 < 128; var11 += 16) {
++            for (int var11 = var15; var11 < SW - OX; var11 += 16) {
+                 var1.drawImage(field_324[8][0], var11 + var3, var9 + var4, 0);
+             }
+ 
+@@ -3904,8 +3996,8 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+         field_326[10].method_60(var1, 0, this.field_122 + var3, this.field_123 + var4, 0, 0, 0);
+         if (var2) {
+-            for (byte var13 = 0; var13 < 160; var13 += 16) {
+-                for (byte var14 = 0; var14 < 128; var14 += 16) {
++            for (int var13 = 0; var13 < 160; var13 += 16) {
++                for (int var14 = -(OX + 15) / 16 * 16; var14 < SW - OX; var14 += 16) {  // [port] was 0..128
+                     field_326[17].method_60(var1, 16, var14, var13, 0, 0, 0);
+                 }
+             }
+@@ -3943,7 +4035,7 @@ public final class class_9 extends Canvas implements Runnable {
+             case 1:
+                 if (!this.field_561) {
+                     this.field_323.setColor(this.field_152);
+-                    this.field_323.fillRect(0, 0, 128, 160);
++                    this.field_323.fillRect(-OX, 0, SW, 160);
+ 
+                     for (int var7 = 0; var7 < 3; var7++) {
+                         int var5 = 47 + var7;
+@@ -4002,10 +4094,10 @@ public final class class_9 extends Canvas implements Runnable {
+             this.field_323.setClip(this.field_110 + 64, this.field_111 + 64, 14, 22);
+             field_326[10].method_60(this.field_323, 0, this.field_122, this.field_123, 0, 0, 0);
+         } else {
+-            this.field_323.setClip(0, 0, 128, 160);
++            this.field_323.setClip(-OX, 0, SW, 160);
+             this.method_143(this.field_323, false);
+             field_326[17].method_60(this.field_323, 11, 64 + class_0.field_2[6], 64 + class_0.field_2[7], 0, 0, 0);
+-            field_326[41].method_65(this.field_323, field_568[27].toLowerCase(), 111, 157, 40);
++            field_326[41].method_65(this.field_323, field_568[27].toLowerCase(), SW - OX - 17, 157, 40);  // [port] corner: was 111
+             this.method_181();
+             this.method_180();
+             this.field_561 = false;
+@@ -4021,7 +4113,7 @@ public final class class_9 extends Canvas implements Runnable {
+                 }
+             }
+ 
+-            this.field_323.setClip(0, 0, 128, 160);
++            this.field_323.setClip(-OX, 0, SW, 160);
+             if (this.field_136 < this.field_135) {
+                 field_326[9]
+                     .method_59(
+@@ -4171,7 +4263,7 @@ public final class class_9 extends Canvas implements Runnable {
+                 if (this.field_134 % 2 == 1) {
+                     int var7 = 838860;
+                     this.field_323.setColor(0 + var7 * this.field_134);
+-                    this.field_323.fillRect(0, 0, 128, 160);
++                    this.field_323.fillRect(-OX, 0, SW, 160);
+                 }
+ 
+                 this.field_134++;
+@@ -4197,7 +4289,7 @@ public final class class_9 extends Canvas implements Runnable {
+         class_8 var3;
+         (var3 = field_326[41]).field_92 = 15;
+         this.field_323.setColor(0);
+-        this.field_323.fillRect(0, 0, 128, 160);
++        this.field_323.fillRect(-OX, 0, SW, 160);
+ 
+         for (int var4 = 0; var4 < 6; var4++) {
+             byte var5;
+@@ -4268,7 +4360,7 @@ public final class class_9 extends Canvas implements Runnable {
+         class_8 var2;
+         (var2 = field_326[41]).field_92 = 2;
+         this.field_323.setColor(0);
+-        this.field_323.fillRect(0, 0, 128, 160);
++        this.field_323.fillRect(-OX, 0, SW, 160);
+         String var1;
+         switch (this.field_441) {
+             case 0:
+@@ -4299,8 +4391,139 @@ public final class class_9 extends Canvas implements Runnable {
+     }
+ 
+     // $VF: renamed from: U () void
++    // [port] widescreen title background. At 282 pixels: /port_title_wide.png, the whole title
++    // painting at that width (tools/make_title_art.py), which replaces the 128x160 painting
++    // (returns true). For other widths: the painting itself, blurred, darkened and stretched
++    // across the full width behind it (built once per screen width; returns false).
++    private static Image titleBackdrop;
++    private static Image titleWide;
++
++    private boolean drawTitleBackdrop() {
++        if (SW <= 128) {
++            return false;
++        }
++
++        if (titleWide == null) {
++            try {
++                titleWide = Image.createImage("/port_title_wide.png");
++            } catch (Exception var8) {
++            }
++        }
++
++        if (titleWide != null && titleWide.getWidth() == SW) {
++            this.field_323.drawImage(titleWide, -OX, 0, 0);
++            return true;
++        }
++
++        if (titleBackdrop == null || titleBackdrop.getWidth() != SW) {
++            Image var1 = Image.createImage(128, 160);
++            Graphics var2 = var1.getGraphics();
++            var2.setColor(0);
++            var2.fillRect(0, 0, 128, 160);
++            field_326[31].method_60(var2, 0, 64, 80, 0, 0, 3);
++            int[] var3 = new int[20480];
++            var1.getRGB(var3, 0, 128, 0, 0, 128, 160);
++            boxBlur(var3, 128, 160, 1, 128, 6);  // rows
++            boxBlur(var3, 128, 160, 128, 1, 6);  // columns
++            int[] var4 = new int[SW * 160];
++
++            for (int var5 = 0; var5 < 160; var5++) {
++                for (int var6 = 0; var6 < SW; var6++) {
++                    int var7 = var3[var5 * 128 + var6 * 128 / SW];
++                    // 40% brightness
++                    var4[var5 * SW + var6] = 0xFF000000 | ((var7 >> 16 & 0xFF) * 2 / 5) << 16 | ((var7 >> 8 & 0xFF) * 2 / 5) << 8 | (var7 & 0xFF) * 2 / 5;
++                }
++            }
++
++            titleBackdrop = Image.createRGBImage(var4, SW, 160, false);
++        }
++
++        this.field_323.drawImage(titleBackdrop, -OX, 0, 0);
++        return false;
++    }
++
++    // [port] the title background (as method_150 draws it) blurred and dimmed, for behind the
++    // main menu; built once per screen width
++    private static Image menuBlurImg;
++
++    private Image menuBlur() {
++        if (menuBlurImg == null || menuBlurImg.getWidth() != SW) {
++            Image var1 = Image.createImage(SW, 160);
++            Graphics var2 = var1.getGraphics();
++            var2.setColor(0);
++            var2.fillRect(0, 0, SW, 160);
++            Graphics var3 = this.field_323;
++            var2.translate(OX, 0);
++            this.field_323 = var2;
++            if (!this.drawTitleBackdrop()) {
++                field_326[31].method_60(var2, 0, 64, 80, 0, 0, 3);
++            }
++
++            this.field_323 = var3;
++            int[] var4 = new int[SW * 160];
++            var1.getRGB(var4, 0, SW, 0, 0, SW, 160);
++
++            for (int var5 = 0; var5 < 2; var5++) {  // two box passes ~ a soft gaussian
++                boxBlur(var4, SW, 160, 1, SW, 3);
++                boxBlur(var4, SW, 160, SW, 1, 3);
++            }
++
++            for (int var6 = 0; var6 < var4.length; var6++) {
++                int var7 = var4[var6];  // 60% brightness, so the menu text stays readable
++                var4[var6] = 0xFF000000 | ((var7 >> 16 & 0xFF) * 3 / 5) << 16 | ((var7 >> 8 & 0xFF) * 3 / 5) << 8 | (var7 & 0xFF) * 3 / 5;
++            }
++
++            menuBlurImg = Image.createRGBImage(var4, SW, 160, false);
++        }
++
++        return menuBlurImg;
++    }
++
++    // [port] in-place box blur of w x h pixels along one axis (step/lineStep pick the axis).
++    private static void boxBlur(int[] var0, int var1, int var2, int var3, int var4, int var5) {
++        int var6 = var3 == 1 ? var2 : var1;  // number of lines
++        int var7 = var3 == 1 ? var1 : var2;  // pixels per line
++        int[] var8 = new int[var7];
++
++        for (int var9 = 0; var9 < var6; var9++) {
++            int var10 = var9 * var4;
++            int var11 = 0;
++            int var12 = 0;
++            int var13 = 0;
++            int var14 = 0;
++
++            for (int var15 = -var5; var15 < var7 + var5; var15++) {
++                if (var15 + var5 < var7) {
++                    int var16 = var0[var10 + Math.min(Math.max(var15 + var5, 0), var7 - 1) * var3];
++                    var11 += var16 >> 16 & 0xFF;
++                    var12 += var16 >> 8 & 0xFF;
++                    var13 += var16 & 0xFF;
++                    var14++;
++                }
++
++                if (var15 - var5 - 1 >= 0) {
++                    int var17 = var0[var10 + (var15 - var5 - 1) * var3];
++                    var11 -= var17 >> 16 & 0xFF;
++                    var12 -= var17 >> 8 & 0xFF;
++                    var13 -= var17 & 0xFF;
++                    var14--;
++                }
++
++                if (var15 >= 0 && var15 < var7 && var14 > 0) {
++                    var8[var15] = var11 / var14 << 16 | var12 / var14 << 8 | var13 / var14;
++                }
++            }
++
++            for (int var18 = 0; var18 < var7; var18++) {
++                var0[var10 + var18 * var3] = var8[var18];
++            }
++        }
++    }
++
+     private void method_150() {
+-        field_326[31].method_60(this.field_323, 0, 64, 80, 0, 0, 3);
++        if (!this.drawTitleBackdrop()) {  // [port] the wide title art includes the painting
++            field_326[31].method_60(this.field_323, 0, 64, 80, 0, 0, 3);
++        }
+         if (field_230 == 30) {
+             field_326[56].method_60(this.field_323, 0, 64, 145, 0, 0, 17);
+         }
+@@ -4309,10 +4532,10 @@ public final class class_9 extends Canvas implements Runnable {
+     // $VF: renamed from: V () void
+     private void method_151() {
+         this.field_323.setColor(0);
+-        this.field_323.fillRect(0, 0, 128, 160);
++        this.field_323.fillRect(-OX, 0, SW, 160);
+         class_8 var1;
+         (var1 = field_326[41]).method_65(this.field_323, field_568[35], 64, 30, 17);
+-        var1.method_65(this.field_323, field_568[1], 0, 160, 36);
++        var1.method_65(this.field_323, "\ue002 " + field_568[1], -OX + 2, 160, 36);  // [port] corner + Vita triangle: was field_568[1] at 0
+         this.method_195();
+         String var2 = field_568[111] + " " + (method_247(field_337, 4) < 500 ? method_247(field_337, 4) : 500) + " " + field_568[109];
+         int var3 = var1.field_92;
+@@ -4511,8 +4734,9 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+     // $VF: renamed from: a (javax.microedition.lcdui.Graphics) void
+     private void method_155(Graphics var1) {
++        int var9 = (SW >> 4) + 2;  // [port] tile columns: was 10 for 128 pixels
+         for (int var2 = -1; var2 < 10; var2++) {
+-            for (int var3 = -1; var3 < 10; var3++) {
++            for (int var3 = -1; var3 < var9; var3++) {
+                 this.field_290 = var3 + this.field_405;
+                 this.field_291 = var2 + this.field_406;
+                 if (this.field_290 >= 0 && this.field_290 < this.field_213 && this.field_291 >= 0 && this.field_291 < this.field_214) {
+@@ -4622,7 +4846,7 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+                             this.field_299 = 0;
+                             this.field_222 = -1;
+-                            var1.setClip(0, -this.field_264, 128, 139);
++                            var1.setClip(0, -this.field_264, SW, 139);  // [port] was 128
+                         } else {
+                             if (field_330 == null) {
+                                 break label154;
+@@ -4836,7 +5060,7 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+     // $VF: renamed from: X () void
+     private void method_156() {
+-        this.field_323.setClip(0, 0, 128, 139);
++        this.field_323.setClip(0, 0, SW, 139);  // [port] was 128
+     }
+ 
+     // $VF: renamed from: Y () void
+@@ -4866,14 +5090,20 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+         int var3 = this.field_207 - this.field_407;
+         int var4 = this.field_208 - this.field_408;
+-        int var5 = var3 + 144;
++        int var5 = var3 + SW + 16;  // [port] was + 144
+         int var6 = var4 + 144;
++        if (SW > 128) {
++            // [port] a wide view can extend past a narrow level's edges: clear what tiles won't cover
++            var1.setColor(0);
++            var1.fillRect(0, 0, SW, 139);
++        }
++
+         this.method_154(var3, var4, var5, var6, false);
+         this.method_156();
+         this.method_155(var1);
+         if (field_374) {
+             var1.setColor(0);
+-            var1.fillRect(0, 0, 128, 160);
++            var1.fillRect(0, 0, SW, 160);  // [port] was 128
+             this.method_195();
+             if (field_409 != null) {
+                 var1.drawImage(field_409, field_410, field_411, field_412);
+@@ -4912,7 +5142,7 @@ public final class class_9 extends Canvas implements Runnable {
+                 }
+             }
+ 
+-            this.field_323.setClip(0, 0, 128, 160);
++            this.field_323.setClip(0, 0, SW, 160);  // [port] was 128
+             this.method_169();
+         } else {
+             this.method_195();
+@@ -4932,8 +5162,9 @@ public final class class_9 extends Canvas implements Runnable {
+                 this.method_183();
+             }
+ 
++            int var52 = (SW >> 4) + 2;  // [port] tile columns: was 10 for 128 pixels
+             for (int var17 = -1; var17 < 10; var17++) {
+-                for (int var24 = -1; var24 < 10; var24++) {
++                for (int var24 = -1; var24 < var52; var24++) {
+                     int var7 = var24 + this.field_405;
+                     int var8 = var17 + this.field_406;
+                     if (var7 >= 0 && var7 < this.field_213 && var8 >= 0 && var8 < this.field_214) {
+@@ -5046,22 +5277,24 @@ public final class class_9 extends Canvas implements Runnable {
+             }
+ 
+             this.field_208 = this.field_208 + this.field_264;
++            int var53 = SW >> 1;  // [port] screen centre: was 64
+             if (this.field_246) {
+-                method_409(var1, field_326[41], field_568[40], 64, 70, 17, 20, false);
++                method_409(var1, field_326[41], field_568[40], var53, 70, 17, 20, false);
+             }
+ 
+             if (this.field_268 > field_234 && this.field_180 != 2) {
+                 if (!this.field_466 && !this.field_128) {
+-                    var4 = (var3 = this.field_268 - field_234) < 16 ? (var3 - 8) * 128 / 16 : (var3 >= 40 ? (48 - var3) * 128 / 12 : 64);
+-                    var5 = 128 - var4;
++                    // [port] level-title banners slide in from the screen edges: 128 -> SW
++                    var4 = (var3 = this.field_268 - field_234) < 16 ? (var3 - 8) * SW / 16 : (var3 >= 40 ? (48 - var3) * SW / 12 : var53);
++                    var5 = SW - var4;
+                     method_409(var1, field_326[41], field_568[field_566[this.field_205]], var4, 15, 17, 20, false);
+                     method_409(var1, field_326[41], field_568[field_567[this.field_205][this.field_206]], var5, 40, 17, 20, false);
+                     if (this.field_162 > 0) {
+-                        method_409(var1, field_326[41], this.field_269, 64, 96, 17, 5, true);
++                        method_409(var1, field_326[41], this.field_269, var53, 96, 17, 5, true);
+                     }
+                 }
+             } else if (this.field_181 > field_234 && this.field_373 <= 2) {
+-                method_409(var1, field_326[41], field_568[36], 64, 85, 17, 20, false);
++                method_409(var1, field_326[41], field_568[36], var53, 85, 17, 20, false);
+             } else if (this.field_181 == field_234 && this.field_373 <= 2) {
+                 this.field_373++;
+                 this.method_123();
+@@ -5098,26 +5331,31 @@ public final class class_9 extends Canvas implements Runnable {
+                 var41.method_189(var45, var48);
+             }
+ 
+-            var1.setClip(0, 0, 128, 160);
++            var1.setClip(0, 0, SW, 160);  // [port] was 128
+             if (this.field_361 == null) {
+                 this.method_169();
+             }
+ 
+             if (this.field_467 != null) {
+                 this.field_176 = true;
+-                method_409(var1, field_326[41], this.field_467, 64, 122, 33, 4, true);
++                method_409(var1, field_326[41], this.field_467, var53, 122, 33, 4, true);
+             }
+ 
+             if (this.field_361 != null && !field_374) {
+                 this.field_176 = true;
++                // [port] dialogue box (portrait + text) is laid out for 128 pixels: centre it
++                OX = SW - 128 >> 1;
++                var1.translate(OX, 0);
+                 this.field_361.method_35(var1);
++                var1.translate(-OX, 0);
++                OX = 0;
+             }
+ 
+             if (this.field_265 > 0) {
+                 this.field_176 = true;
+                 var1.setColor(0);
+-                var1.fillRect(0, 0, 128, this.field_265);
+-                var1.fillRect(0, 160 - this.field_265, 128, this.field_265);
++                var1.fillRect(0, 0, SW, this.field_265);  // [port] letterbox bars: was 128 wide
++                var1.fillRect(0, 160 - this.field_265, SW, this.field_265);
+                 this.method_195();
+                 if (field_409 != null) {
+                     var1.drawImage(field_409, field_410, field_411, field_412);
+@@ -5149,10 +5387,10 @@ public final class class_9 extends Canvas implements Runnable {
+         int var1 = this.field_208 - 16;
+         int var2 = this.field_208 + 160;
+         int var3 = this.field_207;
+-        int var4 = this.field_207 + 128;
++        int var4 = this.field_207 + SW;  // [port] visible right edge: was + 128
+         int var5 = (field_234 >> 1) % field_326[2].method_56(1);
+ 
+-        for (byte var6 = 0; var6 < field_198.length; var6 += 3) {
++        for (int var6 = 0; var6 < field_198.length; var6 += 3) {  // [port] was byte (wraps past 127)
+             int var7 = 0;
+             byte var8;
+             int var9;
+@@ -5512,38 +5750,63 @@ public final class class_9 extends Canvas implements Runnable {
+         boolean var1 = false;
+         Graphics var2 = this.field_323;
+         class_8 var3 = field_326[0];
+-        var2.translate(64, 160);
++        int var13 = SW >> 1;  // [port] HUD is anchored at the screen centre: was 64
++        int var20 = this.field_244 * 1000 + this.field_245;
++        if (SW > 128 && var20 != portHudKeys) {
++            portHudKeys = var20;  // [port] keys are drawn on the bar: repaint it when they change
++            this.field_176 = true;
++        }
++
++        if (SW > 128 && (this.field_176 || field_230 == 2)) {
++            // [port] full HUD redraw: clear the strips beside the 128-wide HUD bar
++            var2.setClip(0, 139, SW, 21);
++            var2.setColor(0);
++            var2.fillRect(0, 139, SW, 21);
++        }
++
++        var2.translate(var13, 160);
+         class_8 var10000;
+         if (!this.field_176 && field_230 != 2) {
+             var1 = true;
+-            var2.setClip(-64, -160, 128, 139);
++            var2.setClip(-var13, -160, SW, 139);
+             var10000 = var3;
+         } else {
+             class_8 var4;
+             if ((var4 = field_326[0]) != null) {
+-                var4.method_60(var2, 0, 0, 0, 0, 0, 0);
++                if (SW > 128) {
++                    // [port] HUD pipe across the whole width: the bar's plain 5-px pipe module (20),
++                    // tiled; the bar's two column groups are drawn over it at the screen edges
++                    var2.setClip(-var13, -21, SW, 21);
++                    for (int var16 = -var13; var16 < SW - var13; var16 += 5) {
++                        var4.method_62(var2, 20, var16, -21, 0);
++                    }
++
++                    var2.setClip(-var13, -160, SW, 160);
++                }
++
++                this.hudFrame(var2, var4, 0, var13);
+                 if (this.field_419) {
+-                    var4.method_60(var2, 19, 0, 0, 0, 0, 0);
++                    this.hudFrame(var2, var4, 19, var13);
+                 }
+             }
+ 
+             var10000 = var3;
+         }
+ 
+-        var10000.method_60(var2, 1, 0, 0, 0, 0, 0);
++        this.hudFrame(var2, var10000, 1, var13);
+         if (this.field_185) {
+             if (var1 && this.field_413 != this.field_184) {
+-                var2.setClip(-64, -160, 128, 160);
++                var2.setClip(-var13, -160, SW, 160);  // [port] was (-64, -160, 128, 160)
+                 var1 = false;
+             }
+ 
+-            var3.method_60(var2, 2, 0, 0, 0, 0, 0);
+-            var3.method_60(var2, 3 + this.field_184, 0, 0, 0, 0, 0);
++            this.hudFrame(var2, var3, 2, var13);
++            this.hudFrame(var2, var3, 3 + this.field_184, var13);
+             this.field_413 = this.field_184;
+         }
+ 
+         if (var1) {
+-            var2.setClip(-64, -160, 128, 160);
++            var2.setClip(-var13, -160, SW, 160);  // [port] was (-64, -160, 128, 160)
+         }
+ 
+         if (this.field_162 > 0) {
+@@ -5573,16 +5836,30 @@ public final class class_9 extends Canvas implements Runnable {
+             var5 = var14;
+         }
+ 
+-        if (var5 > 0) {
+-            var2.drawImage(var12, 32, -37, 0);
+-            method_213(var2, 56, -27, var5, field_326[0].field_88[0], 0);
++        int var17 = this.hudShift(0, var13);  // [port] HUD groups sit at their screen positions
++        int var18 = this.hudShift(1, var13);
++        if (SW > 128) {
++            // [port] widescreen: keys sit on the bar's pipe, just left of the diamond jars (the phone
++            // draws one key, gold before silver, above the jars over the playfield). Both kinds
++            // show when held: [silver n] [gold n].
++            int var19 = SW - 43 - var13 - 4;  // right edge of the rightmost count
++            for (int var23 = 0; var23 < 2; var23++) {
++                int var24 = var23 == 0 ? this.field_244 : this.field_245;
++                Image[] var25 = field_324[24 + var23];
++                if (var24 > 0 && var25 != null) {
++                    var19 = this.drawHudKey(var2, var25[0], var24, var19) - 6;
++                }
++            }
++        } else if (var5 > 0) {
++            var2.drawImage(var12, 32 + var18, -37, 0);
++            method_213(var2, 56 + var18, -27, var5, field_326[0].field_88[0], 0);
+         }
+ 
+         if (this.field_247 != this.field_414 || this.field_176 || this.field_247 <= 1) {
+             Image[] var6 = field_326[0].field_88[0];
+             int var7 = 0;
+             int var8 = this.field_247 <= 1 ? 1 : 0;
+-            int var9 = field_337[8] > 4 ? -16 : -7;
++            int var9 = (field_337[8] > 4 ? -16 : -7) + var17;
+             var2.drawImage(var6[11 + var8], var9, -15, 0);
+             var7 = 0 + var6[11 + var8].getWidth();
+             int var10 = var6[15].getWidth();
+@@ -5613,26 +5890,121 @@ public final class class_9 extends Canvas implements Runnable {
+             this.field_415 = this.field_252;
+             this.field_418 = this.field_162;
+             if (this.field_162 > 0) {
+-                method_214(var2, 41, -7, "" + this.field_252 + "/" + (this.field_162 + this.field_252), field_326[0].field_88[0], 0);
++                method_214(var2, 41 + var18, -7, "" + this.field_252 + "/" + (this.field_162 + this.field_252), field_326[0].field_88[0], 0);
+             } else {
+-                method_213(var2, 36, -7, this.field_252, field_326[0].field_88[0], 0);
++                method_213(var2, 36 + var18, -7, this.field_252, field_326[0].field_88[0], 0);
+             }
+         }
+ 
+         if (this.field_416 != this.field_254 || this.field_176) {
+             this.field_416 = this.field_254;
+-            method_213(var2, 55, -7, this.field_254, field_326[0].field_88[0], 0);
++            method_213(var2, 55 + var18, -7, this.field_254, field_326[0].field_88[0], 0);
+         }
+ 
+         if (this.field_417 != this.field_204 || this.field_176) {
+             this.field_417 = this.field_204;
+-            method_213(var2, -20, -7, this.field_204, field_326[0].field_88[0], 0);
++            method_213(var2, -20 + var17, -7, this.field_204, field_326[0].field_88[0], 0);
+         }
+ 
+-        var2.translate(-64, -160);
++        var2.translate(-var13, -160);  // [port] was -64
+         this.field_176 = false;
+     }
+ 
++    // [port] widescreen HUD: the 128-wide bar is cut into two column groups: 0 = columns 0..85
++    // (compass, face, lives, energy: the phone's own left part, intact) at the left edge, and
++    // 1 = columns 85..128 (diamond jars, keys) at the right edge, with plain pipe tiled between.
++    // hudShift(g) is the x offset for group g relative to the centred bar (whose origin, column
++    // 64, is at var2).
++    private static final int[] HUD_COL0 = new int[]{0, 85};
++    private int portHudKeys;  // keys last drawn on the widescreen bar: gold * 1000 + silver
++
++    // [port] one key and its count on the widescreen bar, ending at x var4 (bar coordinates);
++    // the key is centred on the pipe by its visible pixels. Returns the key's left edge.
++    private int drawHudKey(Graphics var1, Image var2, int var3, int var4) {
++        int var5 = 0;  // count's width (method_213 draws it right-aligned)
++
++        for (int var6 = var3; var6 > 0; var6 /= 10) {
++            var5 += field_326[0].field_88[0][var6 % 10].getWidth();
++        }
++
++        method_213(var1, var4, -14, var3, field_326[0].field_88[0], 0);
++        int[] var7 = opaqueRows(var2);
++        int var8 = var4 - var5 - 3 - var2.getWidth();
++        var1.drawImage(var2, var8, -11 - (var7[0] + var7[1] >> 1), 0);
++        return var8;
++    }
++
++    // [port] first and last row of an image holding a visible pixel (cached per image)
++    private static Image[] opaqueImg = new Image[4];
++    private static int[][] opaqueVal = new int[4][];
++
++    private static int[] opaqueRows(Image var0) {
++        int var1 = 0;
++        while (var1 < 4 && opaqueImg[var1] != null && opaqueImg[var1] != var0) {
++            var1++;
++        }
++
++        if (var1 < 4 && opaqueImg[var1] == var0) {
++            return opaqueVal[var1];
++        }
++
++        int var2 = var0.getWidth();
++        int var3 = var0.getHeight();
++        int[] var4 = new int[var2 * var3];
++        var0.getRGB(var4, 0, var2, 0, 0, var2, var3);
++        int var5 = var3;
++        int var6 = -1;
++
++        for (int var7 = 0; var7 < var3; var7++) {
++            for (int var8 = 0; var8 < var2; var8++) {
++                if ((var4[var7 * var2 + var8] >>> 24) != 0) {
++                    var5 = Math.min(var5, var7);
++                    var6 = Math.max(var6, var7);
++                }
++            }
++        }
++
++        int[] var9 = var6 < 0 ? new int[]{0, var3 - 1} : new int[]{var5, var6};
++        if (var1 == 4) {
++            var1 = 0;  // full: reuse the first slot
++        }
++
++        opaqueImg[var1] = var0;
++        opaqueVal[var1] = var9;
++        return var9;
++    }
++    private static final int[] HUD_COL1 = new int[]{85, 128};
++
++    private int hudShift(int var1, int var2) {
++        if (SW <= 128) {
++            return 0;
++        }
++
++        int var3 = var1 == 0 ? 0 : SW - 43;  // group's screen x
++        return var3 - HUD_COL0[var1] + 64 - var2;
++    }
++
++    // [port] draws HUD sprite frame var3 (bar coordinates, origin at the translated centre var4)
++    // as its clipped column groups at their screen positions. On a 128-wide screen: a plain draw.
++    private void hudFrame(Graphics var1, class_8 var2, int var3, int var4) {
++        if (SW <= 128) {
++            var2.method_60(var1, var3, 0, 0, 0, 0, 0);
++            return;
++        }
++
++        int var5 = var1.getClipX();
++        int var6 = var1.getClipY();
++        int var7 = var1.getClipWidth();
++        int var8 = var1.getClipHeight();
++
++        for (int var9 = 0; var9 < 2; var9++) {
++            int var10 = this.hudShift(var9, var4);
++            var1.clipRect(HUD_COL0[var9] - 64 + var10, -160, HUD_COL1[var9] - HUD_COL0[var9], 160);
++            var2.method_60(var1, var3, var10, 0, 0, 0, 0);
++            var1.setClip(var5, var6, var7, var8);
++        }
++    }
++
+     // $VF: renamed from: aj () void
+     private void method_170() {
+         field_330 = field_326[6];
+@@ -5757,24 +6129,11 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+     // $VF: renamed from: an () void
+     private void method_176() {
+-        if (this.field_431 == null) {
+-            this.field_431 = new int[128];
+-
+-            for (int var1 = 0; var1 < 128; var1++) {
+-                int[] var10000;
+-                int var10001;
+-                int var10002;
+-                if (var1 % 2 == 1) {
+-                    var10000 = this.field_431;
+-                    var10001 = var1;
+-                    var10002 = 0;
+-                } else {
+-                    var10000 = this.field_431;
+-                    var10001 = var1;
+-                    var10002 = -16777216;
+-                }
++        if (this.field_431 == null || this.field_431.length != SW) {  // [port] SW wide: was 128
++            this.field_431 = new int[SW];
+ 
+-                var10000[var10001] = var10002;
++            for (int var1 = 0; var1 < SW; var1++) {
++                this.field_431[var1] = var1 % 2 == 1 ? 0 : -16777216;
+             }
+         }
+     }
+@@ -5782,24 +6141,30 @@ public final class class_9 extends Canvas implements Runnable {
+     // $VF: renamed from: c (int, int) void
+     private void method_177(int var1, int var2) {
+         if (field_230 == 4) {
+-            this.method_176();
+-
+-            for (int var3 = var1 - 1; var3 < var2 - 2; var3++) {
+-                this.field_323.drawRGB(this.field_431, 0, 128, var3 % 2, var3, 128, 1, true);
+-            }
++            // [port] behind the menu: the title background blurred and dimmed (the phone dims it
++            // with a checkerboard of black pixels)
++            Image var4 = this.menuBlur();
++            int var5 = this.field_323.getClipX();
++            int var6 = this.field_323.getClipY();
++            int var7 = this.field_323.getClipWidth();
++            int var8 = this.field_323.getClipHeight();
++            this.field_323.clipRect(-OX, var1 - 1, SW, var2 - 2 - (var1 - 1));
++            this.field_323.drawImage(var4, -OX, 0, 0);
++            this.field_323.setClip(var5, var6, var7, var8);
+         }
+ 
+         if (field_230 == 2) {
+             this.field_323.setColor(0);
+-            this.field_323.fillRect(0, var1 - 1, 128, var2 - 2 - (var1 - 1));
++            this.field_323.fillRect(-OX, var1 - 1, SW, var2 - 2 - (var1 - 1));  // [port] was 0..128
+         }
+ 
+         this.field_323.setColor(16777215);
+-        this.field_323.drawLine(0, var1 - 1 - 1, 128, var1 - 1 - 1);
+-        this.field_323.drawLine(0, var2 - 1, 128, var2 - 1);
++        int var4 = -OX + SW;  // [port] separator lines span the screen: were 0..128
++        this.field_323.drawLine(-OX, var1 - 1 - 1, var4, var1 - 1 - 1);
++        this.field_323.drawLine(-OX, var2 - 1, var4, var2 - 1);
+         this.field_323.setColor(0);
+-        this.field_323.drawLine(0, var1 - 1 - 2, 128, var1 - 1 - 2);
+-        this.field_323.drawLine(0, var2 - 2, 128, var2 - 2);
++        this.field_323.drawLine(-OX, var1 - 1 - 2, var4, var1 - 1 - 2);
++        this.field_323.drawLine(-OX, var2 - 2, var4, var2 - 2);
+     }
+ 
+     // $VF: renamed from: ao () void
+@@ -5818,7 +6183,7 @@ public final class class_9 extends Canvas implements Runnable {
+         int var1;
+         var1 = (var1 = 160 - (this.field_422 * 11 + 1 + 2)) + (!this.field_437 && this.field_271 == 0 ? 11 : 0);
+         int var2 = 160;
+-        this.field_323.setClip(0, 0, 128, 160);
++        this.field_323.setClip(-OX, 0, SW, 160);
+         if (field_230 == 2 && field_433 && field_434) {
+             this.field_419 = false;
+             this.method_157();
+@@ -5826,6 +6191,16 @@ public final class class_9 extends Canvas implements Runnable {
+             field_434 = false;
+         }
+ 
++        // [port] the in-game menu is laid out for 128 pixels: centre it over the wide game view
++        int var31 = field_230 == 2 ? SW - 128 >> 1 : 0;
++        int var32 = OX;
++        if (field_230 == 2) {
++            OX = var31;
++        }
++
++        this.field_323.translate(var31, 0);
++        this.field_323.setClip(-OX, 0, SW, 160);
++
+         if (field_230 == 7 || field_230 == 2) {
+             int var3 = var1 - (80 - (160 - var1) / 2);
+             var1 -= var3;
+@@ -5837,29 +6212,13 @@ public final class class_9 extends Canvas implements Runnable {
+         }
+ 
+         if (field_230 == 7) {
+-            Graphics var10000;
+-            byte var10001;
+-            int var10002;
+-            short var10003;
+-            short var10004;
++            // [port] full-width clears (were x 0..128)
++            this.field_323.setColor(0);
+             if (this.field_432 != -1 && !field_433) {
+-                int var16 = var1 + this.field_432 * 11;
+-                this.field_323.setColor(0);
+-                var10000 = this.field_323;
+-                var10001 = 0;
+-                var10002 = var16;
+-                var10003 = 128;
+-                var10004 = 12;
++                this.field_323.fillRect(-OX, var1 + this.field_432 * 11, SW, 12);
+             } else {
+-                this.field_323.setColor(0);
+-                var10000 = this.field_323;
+-                var10001 = 0;
+-                var10002 = 0;
+-                var10003 = 128;
+-                var10004 = 160;
++                this.field_323.fillRect(-OX, 0, SW, 160);
+             }
+-
+-            var10000.fillRect(var10001, var10002, var10003, var10004);
+         }
+ 
+         long var17 = System.currentTimeMillis();
+@@ -5871,7 +6230,7 @@ public final class class_9 extends Canvas implements Runnable {
+         if (this.field_432 != -1 && !field_433) {
+             int var5 = this.field_271 == 0 && this.field_432 > 1 && !this.field_437 ? 11 : 0;
+             int var6 = var1 + this.field_432 * 11 - var5;
+-            this.field_323.setClip(0, var6, 128, 12);
++            this.field_323.setClip(-OX, var6, SW, 12);  // [port] was (0, var6, 128, 12)
+         }
+ 
+         if (this.field_432 != this.field_273 || field_433) {
+@@ -5888,10 +6247,7 @@ public final class class_9 extends Canvas implements Runnable {
+                     var7 -= 11;
+                 }
+ 
+-                byte var8 = 0;
+-                if (var18 == 2 && this.field_271 == 0) {
+-                    var8 = 1;
+-                }
++                byte var8 = 0;  // [port] item 2 (MORE GAMES) used the red font; no longer exists
+ 
+                 label182: {
+                     Graphics var23;
+@@ -5905,9 +6261,9 @@ public final class class_9 extends Canvas implements Runnable {
+                             if (var18 != this.field_273) {
+                                 this.field_323.setColor(13421772);
+                                 var23 = this.field_323;
+-                                var26 = 0;
++                                var26 = -OX;  // [port] full-width bar: was 0..128
+                                 var28 = var7 - 5 + 1;
+-                                var29 = 128;
++                                var29 = (short)SW;
+                                 var30 = 10;
+                                 break label254;
+                             }
+@@ -5925,9 +6281,9 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+                         var23.setColor(var26);
+                         var23 = this.field_323;
+-                        var26 = 0;
++                        var26 = -OX;  // [port] full-width selection bar: was 0..128
+                         var28 = var7 - 5;
+-                        var29 = 128;
++                        var29 = (short)SW;
+                         var30 = 12;
+                     }
+ 
+@@ -5953,7 +6309,7 @@ public final class class_9 extends Canvas implements Runnable {
+                 field_326[41].field_83 = var8;
+                 field_326[41].method_65(this.field_323, field_568[field_565[this.field_271][var18 * 2 + 1]], 64 - var9 / 2 - var11, var7 + 1, 6);
+                 if (var14) {
+-                    this.field_323.setClip(0, 0, 128, 160);
++                    this.field_323.setClip(-OX, 0, SW, 160);
+                 }
+ 
+                 if (var18 == this.field_273) {
+@@ -5989,7 +6345,7 @@ public final class class_9 extends Canvas implements Runnable {
+             this.field_427++;
+         }
+ 
+-        this.field_323.setClip(0, 0, 128, 160);
++        this.field_323.setClip(-OX, 0, SW, 160);
+         int var19;
+         if (this.field_271 == 0 && method_369() && (var19 = this.field_421 % 20) >= 10) {
+             int var21 = this.field_437 ? 2 : 1;
+@@ -6022,6 +6378,9 @@ public final class class_9 extends Canvas implements Runnable {
+             field_434 = true;
+             field_436 = false;
+         }
++
++        this.field_323.translate(-var31, 0);  // [port]
++        OX = var32;
+     }
+ 
+     // $VF: renamed from: a () void
+@@ -6031,7 +6390,7 @@ public final class class_9 extends Canvas implements Runnable {
+         }
+ 
+         if (field_326[18] != null) {
+-            field_326[18].method_60(this.field_323, 3, 2, 151, 0, 0, 0);
++            class_8.drawGlyph(this.field_323, 57346, -OX + 2, 150);  // [port] Vita triangle (left soft key): was ui.f frame 3 at x 2
+         }
+     }
+ 
+@@ -6042,7 +6401,7 @@ public final class class_9 extends Canvas implements Runnable {
+         }
+ 
+         if (field_326[18] != null) {
+-            field_326[18].method_60(this.field_323, 0, 126 - this.field_426, 151, 0, 0, 0);
++            class_8.drawGlyph(this.field_323, 57345, -OX + SW - 11, 150);  // [port] Vita circle (right soft key): was ui.f frame 0 at 126 - w
+         }
+     }
+ 
+@@ -6050,16 +6409,18 @@ public final class class_9 extends Canvas implements Runnable {
+     private void method_182() {
+         Graphics var1 = this.field_323;
+         this.field_323.setColor(0);
+-        var1.fillRect(0, 0, 128, 160);
++        var1.fillRect(-OX, 0, SW, 160);
++        // [port] progress bar spans the screen width: was x 4..123 (118 px of fill)
++        int var3 = SW - 10;
+         int var2;
+-        if ((var2 = (this.field_275 + 1) * 118 / this.field_274) > 118) {
+-            var2 = 118;
++        if ((var2 = (this.field_275 + 1) * var3 / this.field_274) > var3) {
++            var2 = var3;
+         }
+ 
+         var1.setColor(13540096);
+-        this.field_323.fillRect(5, 150, var2, 6);
++        this.field_323.fillRect(-OX + 5, 150, var2, 6);
+         var1.setColor(16554500);
+-        this.field_323.drawRoundRect(4, 149, 119, 7, 2, 2);
++        this.field_323.drawRoundRect(-OX + 4, 149, var3 + 1, 7, 2, 2);
+         field_326[41].field_83 = 0;
+         field_326[41].method_65(this.field_323, field_568[37], 64, 136, 1);
+     }
+@@ -6087,7 +6448,7 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+     // $VF: renamed from: as () void
+     private void method_184() {
+-        if (this.field_207 + 128 > 960 && this.field_208 + 160 > 32) {
++        if (this.field_207 + SW > 960 && this.field_208 + 160 > 32) {  // [port] was + 128
+             if (field_326[10] == null) {
+                 field_326[10] = method_358("/mmv.f", 0);
+             }
+@@ -6139,7 +6500,7 @@ public final class class_9 extends Canvas implements Runnable {
+         }
+ 
+         if (this.field_186 != 15) {
+-            if (this.field_207 + 128 + 32 >= this.field_190 && this.field_208 + 160 + 32 >= 336) {
++            if (this.field_207 + SW + 32 >= this.field_190 && this.field_208 + 160 + 32 >= 336) {  // [port] was + 128
+                 class_3 var3;
+                 (var3 = field_329[5]).field_19 = this.field_190 - this.field_207;
+                 var3.field_20 = 336 - this.field_208;
+@@ -6195,7 +6556,7 @@ public final class class_9 extends Canvas implements Runnable {
+     // $VF: renamed from: a (javax.microedition.lcdui.Graphics, int) void
+     private void method_189(Graphics var1, int var2) {
+         int var3 = var2 * 12 + 2;
+-        int var4 = 128 - var3 >> 1;
++        int var4 = SW - var3 >> 1;  // [port] centred: was 128
+         if (this.field_188 > 0) {
+             var1.setColor(0);
+             var1.fillRect(var4, 5, var3, 12);
+@@ -6284,7 +6645,7 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+         for (int var7 = 0; var7 < 3; var7++) {
+             int var6;
+-            if ((var6 = (var7 * (2 + (var7 > 0 ? 1 : 0)) + 10) * 16 - this.field_207) < 128 && var6 > -32 && this.field_208 > 0) {
++            if ((var6 = (var7 * (2 + (var7 > 0 ? 1 : 0)) + 10) * 16 - this.field_207) < SW && var6 > -32 && this.field_208 > 0) {  // [port] was < 128
+                 field_326[40].method_60(var1, 1, var6, 144 - this.field_208, 0, 0, 0);
+             }
+         }
+@@ -6344,7 +6705,7 @@ public final class class_9 extends Canvas implements Runnable {
+     private void method_192() {
+         for (byte var1 = 3; var1 < 13; var1 += 2) {
+             int var2;
+-            int var3 = ((var2 = 10 * (2 * var1 / 5 + 1)) + field_234 / var2) * var1 % 128;
++            int var3 = ((var2 = 10 * (2 * var1 / 5 + 1)) + field_234 / var2) * var1 % SW;  // [port] was % 128
+             int var4 = 160 / var2 * field_234 % 160;
+             this.field_323.drawImage(field_324[27][var1 & 1], var3, var4, 0);
+         }
+@@ -6363,7 +6724,7 @@ public final class class_9 extends Canvas implements Runnable {
+         int var3 = (field_234 << 3) % 160;
+         int var2 = (field_234 / 160 & 1) == 0 ? 160 - var3 : 0 + var3;
+         var1.setColor(255, var2, 0);
+-        var1.drawRect(0, 0, 127, 159);
++        var1.drawRect(0, 0, SW - 1, 159);  // [port] was 127
+     }
+ 
+     // $VF: renamed from: aB () void
+@@ -7265,7 +7626,7 @@ public final class class_9 extends Canvas implements Runnable {
+     private void method_212() {
+         class_3 var1 = field_329[0];
+         this.field_323.setColor(0);
+-        this.field_323.fillRect(0, 0, 128, 160);
++        this.field_323.fillRect(-OX, 0, SW, 160);
+         var1.field_20 = 54;
+         int var3 = 0;
+         if (field_234 > 16) {
+@@ -8901,7 +9262,7 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+         label420: {
+             class_9 var28;
+-            byte var32;
++            int var32;  // [port] was byte; holds int values
+             if (this.field_242 > 0) {
+                 if (field_341[this.field_238][this.field_239] < 0) {
+                     byte var35;
+@@ -9164,8 +9525,8 @@ public final class class_9 extends Canvas implements Runnable {
+                     this.field_208 = 0;
+                 }
+ 
+-                if (this.field_207 < 0) {
+-                    this.field_207 = 0;
++                if (this.field_207 < this.camMinX()) {  // [port] was 0
++                    this.field_207 = this.camMinX();
+                 }
+             }
+         }
+@@ -9215,7 +9576,7 @@ public final class class_9 extends Canvas implements Runnable {
+             return false;
+         }
+ 
+-        for (byte var2 = 0; var2 < field_198.length; var2 += 3) {
++        for (int var2 = 0; var2 < field_198.length; var2 += 3) {  // [port] was byte (wraps past 127)
+             if (field_198[var2 + 2] == var1 && (field_198[var2 + 0] - 1 == var0 || field_198[var2 + 1] + 1 == var0)) {
+                 return true;
+             }
+@@ -9228,7 +9589,7 @@ public final class class_9 extends Canvas implements Runnable {
+     private void method_243() {
+         int var1 = this.field_213 - 1;
+ 
+-        for (byte var2 = 0; var2 < field_198.length; var2 += 3) {
++        for (int var2 = 0; var2 < field_198.length; var2 += 3) {  // [port] was byte (wraps past 127)
+             byte var3;
+             if ((var3 = field_198[var2 + 2]) > 0) {
+                 byte var4 = field_198[var2 + 1];
+@@ -9302,7 +9663,7 @@ public final class class_9 extends Canvas implements Runnable {
+                     var2 = field_326[41];
+                     var3 = this.field_323;
+                     this.field_323.setColor(2496263);
+-                    var3.fillRect(0, 0, 128, 160);
++                    var3.fillRect(-OX, 0, SW, 160);
+                     switch (var1) {
+                         case 0:
+                             break label106;
+@@ -9425,7 +9786,7 @@ public final class class_9 extends Canvas implements Runnable {
+             var2.method_65(var3, field_568[field_567[this.field_205][this.field_206]], 64, 10, 17);
+         }
+ 
+-        field_326[41].method_65(this.field_323, field_568[this.field_231 == 5 ? 98 : 53], 0, 156, 36);
++        field_326[41].method_65(this.field_323, field_568[this.field_231 == 5 ? 98 : 53], -OX, 156, 36);  // [port] corner: was 0
+     }
+ 
+     // $VF: renamed from: a (byte[], int) int
+@@ -11370,12 +11731,131 @@ public final class class_9 extends Canvas implements Runnable {
+         }
+     }
+ 
++    // [port] widescreen state as reported by the host (MIDlet property); on a phone: canvas width.
++    private static boolean portUnlocked;
++
++    // [port] test hook: what the game's removed cheat screen did for "unlock all / secret stages"
++    private void portDebugUnlock() {
++        if (field_337 == null) {
++            return;  // no save yet
++        }
++
++        for (int var1 = 0; var1 <= 2; var1++) {
++            int var2 = this.method_131(var1);
++            if (var1 == 2) {
++                var2++;
++            }
++
++            for (int var3 = 0; var3 <= var2; var3++) {
++                this.method_126(var1, var3, (byte)2);
++                this.method_126(var1, var3, (byte)64);
++            }
++
++            this.method_127(var1, var2);
++        }
++
++        for (int var4 = 0; var4 <= 2; var4++) {
++            int var5 = this.method_130(var4);
++            if (var4 == 0) {
++                var5--;
++            }
++
++            for (int var6 = this.method_131(var4); var6 < var5; var6++) {
++                this.method_126(var4, var6, (byte)2);
++                this.method_126(var4, var6, (byte)64);
++            }
++
++            this.method_127(var4, var5 - 1);
++        }
++
++        method_249(4, 900);  // diamonds and red diamonds, enough to open every world and the shop
++        method_249(6, 60);
++        this.method_119();
++    }
++
++    // [port] widescreen: fills the screen beside a 128-px-layout sprite frame (drawn at x, y) with
++    // copies of what the phone showed of it (columns 0..128), mirrored and unmirrored in turn
++    // outwards to both screen edges, so the art continues seamlessly. Each copy is clipped to its
++    // own 128-column slot (art hanging past the phone's edges stays hidden, as on the phone).
++    private static void mirrorExtend(Graphics var0, class_8 var1, int var2, int var3, int var4) {
++        if (SW <= 128) {
++            return;
++        }
++
++        int var5 = var0.getClipX();
++        int var6 = var0.getClipY();
++        int var7 = var0.getClipWidth();
++        int var8 = var0.getClipHeight();
++
++        for (int var9 = 1; -(var9 - 1) * 128 > -OX || var9 * 128 < SW - OX; var9++) {
++            boolean var10 = (var9 & 1) != 0;  // odd copies are mirrored
++            for (int var11 = -1; var11 <= 1; var11 += 2) {
++                int var12 = var11 < 0 ? -var9 * 128 : var9 * 128;  // slot's left column
++                int var13;  // anchor x for this copy
++                if (var10) {
++                    var13 = var11 < 0 ? -var3 - (var9 - 1) * 128 : 256 - var3 + (var9 - 1) * 128;
++                } else {
++                    var13 = var3 + var11 * var9 * 128;
++                }
++
++                var0.setClip(var5, var6, var7, var8);
++                var0.clipRect(var12, 0, 128, 160);
++                var1.method_60(var0, var2, var13, var4, var10 ? 1 : 0, 0, 0);
++            }
++        }
++
++        var0.setClip(var5, var6, var7, var8);
++        var0.clipRect(0, 0, 128, 160);
++        var1.method_60(var0, var2, var3, var4, 0, 0, 0);  // the original, without its overhang
++        var0.setClip(var5, var6, var7, var8);
++    }
++
++    // [port] /port_banner_<world>.png: a world-map banner widened to 282 pixels (null if missing)
++    private static Image[] portBanners = new Image[3];
++
++    private static Image portBanner(int var0) {
++        if (var0 < 0 || var0 >= 3) {
++            return null;
++        }
++
++        if (portBanners[var0] == null) {
++            try {
++                portBanners[var0] = Image.createImage("/port_banner_" + var0 + ".png");
++            } catch (Exception var2) {
++            }
++        }
++
++        return portBanners[var0];
++    }
++
++    private static boolean portScalePixel() {
++        return "pixel".equals(field_365.getAppProperty("Port-Scale"));
++    }
++
++    private static boolean portWidescreen() {
++        String var0 = field_365.getAppProperty("Port-Widescreen");
++        return var0 != null ? var0.equals("1") : SW > 128;
++    }
++
++    // [port] horizontal camera limits for the current screen width. A level narrower than the
++    // screen is centered (both limits equal, negative).
++    public int camMinX() {
++        int var1 = (this.field_213 << 4) - SW;
++        return var1 < 0 ? var1 / 2 : 0;
++    }
++
++    public int camMaxX() {
++        int var1 = (this.field_213 << 4) - SW;
++        return var1 < 0 ? var1 / 2 : var1;
++    }
++
+     // $VF: renamed from: c () void
+     public final void method_288() {
+         byte var1 = (this.field_241 & 4096) == 0 ? this.field_203 : 0;
+         int var2 = (this.field_238 << 4) + this.field_240 * field_331[var1];
+-        int var4 = (this.field_213 << 4) - 128;
++        int var4 = this.camMaxX();  // [port] was (field_213 << 4) - 128
+         int var5 = (this.field_214 << 4) - 139;
++        int var6 = (SW >> 1) - 16;  // [port] dead zone: was 48..64 for a 128-wide screen
+         if ((this.field_241 & 2) != 0) {
+             var2 += 16;
+         } else if ((this.field_241 & 4) != 0) {
+@@ -11385,20 +11865,20 @@ public final class class_9 extends Canvas implements Runnable {
+         label72: {
+             class_9 var10000;
+             int var10001;
+-            if (var2 < this.field_211 + 48) {
+-                this.field_211 = this.field_211 - 48 + var2 >> 1;
+-                if (this.field_211 >= 0) {
++            if (var2 < this.field_211 + var6) {
++                this.field_211 = this.field_211 - var6 + var2 >> 1;
++                if (this.field_211 >= this.camMinX()) {
+                     break label72;
+                 }
+ 
+                 var10000 = this;
+-                var10001 = 0;
++                var10001 = this.camMinX();
+             } else {
+-                if (var2 <= this.field_211 + 64) {
++                if (var2 <= this.field_211 + var6 + 16) {
+                     break label72;
+                 }
+ 
+-                this.field_211 = this.field_211 - 64 + var2 >> 1;
++                this.field_211 = this.field_211 - (var6 + 16) + var2 >> 1;
+                 if (this.field_211 <= var4) {
+                     break label72;
+                 }
+@@ -11437,10 +11917,10 @@ public final class class_9 extends Canvas implements Runnable {
+             class_9 var7;
+             int var9;
+             int var10002;
+-            if (this.field_207 < 0) {
++            if (this.field_207 < this.camMinX()) {  // [port] was < 0
+                 var7 = this;
+                 var9 = this.field_209;
+-                var10002 = this.field_207;
++                var10002 = this.field_207 - this.camMinX();
+             } else {
+                 if (this.field_207 <= var4) {
+                     break label58;
+@@ -11645,42 +12125,23 @@ public final class class_9 extends Canvas implements Runnable {
+                             break label326;
+                         }
+ 
+-                        label321: {
+-                            label320: {
+-                                var16 = true;
+-                                switch (field_339[var13][var14] >> 8) {
+-                                    case 0:
+-                                        if (field_337[9] >= 1) {
+-                                            this.field_216 = 7;
+-                                            var38 = this;
+-                                            var10001 = 0;
+-                                            break label321;
+-                                        }
+-
+-                                        var37 = this;
+-                                        break;
+-                                    case 1:
+-                                        if (field_337[9] >= 2) {
+-                                            var37 = this;
+-                                            var10001 = 7;
+-                                            break label320;
+-                                        }
+-
+-                                        var37 = this;
+-                                        break;
+-                                    default:
+-                                        break label326;
++                        // [port] rebuilt from mangled label/break flow (undeclared var37/var38)
++                        var16 = true;
++                        switch (field_339[var13][var14] >> 8) {
++                            case 0:
++                                if (field_337[9] >= 1) {
++                                    this.field_216 = 7;
++                                    this.field_217 = 0;
++                                } else {
++                                    this.field_216 = 13;
++                                    this.field_217 = 1;
+                                 }
+-
+-                                var10001 = 13;
+-                            }
+-
+-                            var37.field_216 = var10001;
+-                            var38 = this;
+-                            var10001 = 1;
++                                break;
++                            case 1:
++                                this.field_216 = field_337[9] >= 2 ? 7 : 13;
++                                this.field_217 = 1;
++                                break;
+                         }
+-
+-                        var38.field_217 = var10001;
+                         break label326;
+                     case 3:
+                         if (field_339[var13][var14] >> 8 < 3) {
+@@ -12076,9 +12537,9 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+                 if (this.field_361 != null && !field_374) {
+                     this.field_323.setColor(0);
+-                    this.field_323.fillRect(0, 0, 128, 30);
+-                    this.field_323.fillRect(0, 130, 128, 30);
+-                    field_326[41].method_65(this.field_323, field_568[53], 128, 156, 40);
++                    this.field_323.fillRect(-OX, 0, SW, 30);  // [port] was 0..128
++                    this.field_323.fillRect(-OX, 130, SW, 30);  // [port] was 0..128
++                    field_326[41].method_65(this.field_323, field_568[53], SW - OX, 156, 40);  // [port] corner: was 128
+                     return;
+                 }
+ 
+@@ -12664,17 +13125,8 @@ public final class class_9 extends Canvas implements Runnable {
+                         this.field_333 |= 8388608L;
+                         continue;
+                     case 48:
+-                        if ((var11 & 7) == 4) {
+-                            var45 = field_340[var8];
+-                            var50 = var9;
+-                            var55 = 16;
+-                        } else {
+-                            var45 = field_340[var8];
+-                            var50 = var9;
+-                            var55 = 0;
+-                        }
+-
+-                        var45[var50] = var55;
++                        // [port] decompiler merged byte[]/int[] row locals; this branch writes the int map
++                        field_340[var8][var9] = (var11 & 7) == 4 ? 16 : 0;
+                         this.field_199++;
+                         this.field_333 |= 1099511627776L;
+                         this.field_333 |= 4294967296L;
+@@ -12694,7 +13146,8 @@ public final class class_9 extends Canvas implements Runnable {
+                         this.field_239 = var9;
+                         this.field_201 = var8;
+                         field_341[var8][var9] = -1;
+-                        this.field_207 = this.field_211 = this.field_209 = this.field_210 = 0;
++                        this.field_209 = this.field_210 = 0;
++                        this.field_207 = this.field_211 = this.camMinX();  // [port] was 0
+                         this.field_212 = this.field_208 = this.field_239 * 16 - 48;
+                         continue;
+                 }
+@@ -12972,10 +13425,10 @@ public final class class_9 extends Canvas implements Runnable {
+         label45: {
+             var1 = false;
+             var2 = false;
+-            if (this.field_207 < 0) {
+-                this.field_207 = 0;
+-            } else if (this.field_207 > this.field_213 * 16 - 128) {
+-                this.field_207 = this.field_213 * 16 - 128;
++            if (this.field_207 < this.camMinX()) {  // [port] was 0 .. field_213 * 16 - 128
++                this.field_207 = this.camMinX();
++            } else if (this.field_207 > this.camMaxX()) {
++                this.field_207 = this.camMaxX();
+             } else if (this.field_207 != this.field_346) {
+                 break label45;
+             }
+@@ -13273,7 +13726,7 @@ public final class class_9 extends Canvas implements Runnable {
+                         this.method_330();
+                     }
+ 
+-                    byte var16;
++                    int var16;  // [port] was byte; holds int values
+                     switch (field_341[this.field_288][this.field_289]) {
+                         case 0:
+                             this.method_355();
+@@ -13591,16 +14044,10 @@ public final class class_9 extends Canvas implements Runnable {
+                     }
+ 
+                     field_342[var1][var3] = 12;
+-                    var8 = field_339[var1];
+-                    var10 = var3;
+-                    var12 = 35;
++                    field_339[var1][var3] = 35;  // [port] was merged byte[]/int[] local
+                 } else {
+-                    var8 = field_339[var1];
+-                    var10 = var3;
+-                    var12 = 37;
++                    field_339[var1][var3] = 37;
+                 }
+-
+-                var8[var10] = var12;
+             }
+ 
+             byte var6 = field_341[var1][var2];
+@@ -13612,17 +14059,8 @@ public final class class_9 extends Canvas implements Runnable {
+             }
+ 
+             if ((field_339[var1][var4] & 0xFF) != 35 && field_341[var1][var4] != 47) {
+-                if (field_339[var1][var2] == 37) {
+-                    var8 = field_339[var1];
+-                    var10 = var2;
+-                    var12 = 34;
+-                } else {
+-                    var8 = field_339[var1];
+-                    var10 = var2;
+-                    var12 = -1;
+-                }
+-
+-                var8[var10] = var12;
++                // [port] was merged byte[]/int[] local
++                field_339[var1][var2] = field_339[var1][var2] == 37 ? 34 : -1;
+             }
+ 
+             field_343[var1][var3] = 16;
+@@ -13762,7 +14200,7 @@ public final class class_9 extends Canvas implements Runnable {
+                         || var7 != 1 && var7 != 3
+                         || var3 < 0
+                         || var3 > 3
+-                        || (this.field_238 >= var1 || field_341[var1 - 1][var2] >= 0 || var1 * 16 >= this.field_207 + 128)
++                        || (this.field_238 >= var1 || field_341[var1 - 1][var2] >= 0 || var1 * 16 >= this.field_207 + SW)  /* [port] visible edge: was + 128 */
+                             && (this.field_238 <= var1 || field_341[var1 + 1][var2] >= 0 || (var1 + 1) * 16 <= this.field_207)) {
+                         label175: {
+                             var4++;
+@@ -13832,7 +14270,7 @@ public final class class_9 extends Canvas implements Runnable {
+                                     var15 = this.field_238 < var1 ? 0 : 1;
+                                     break;
+                                 case 4:
+-                                    var15 = this.field_239 == var2 && var3 != 4 && var1 * 16 < this.field_207 + 128 ? 4 : 0;
++                                    var15 = this.field_239 == var2 && var3 != 4 && var1 * 16 < this.field_207 + SW ? 4 : 0;  // [port] visible edge: was + 128
+                             }
+ 
+                             var3 = var15;
+@@ -15627,7 +16065,7 @@ public final class class_9 extends Canvas implements Runnable {
+             this.field_260 = 0;
+             this.field_261 = 0;
+             this.field_345 = true;
+-            this.field_346 = this.field_302 * 16 - 64;
++            this.field_346 = this.field_302 * 16 - (SW >> 1);  // [port] centre on tile: was - 64
+             this.field_347 = this.field_303 * 16 - 80;
+             this.field_265 = 0;
+             int[] var10000;
+@@ -15831,6 +16269,7 @@ public final class class_9 extends Canvas implements Runnable {
+             label462: {
+                 int var10001;
+                 byte var10002;
++                byte[] var34;  // [port] declaration lost by decompiler
+                 label435: {
+                     if (var3 <= 0 && !var14) {
+                         if (var11 == var7 && this.method_302(var1, var8) && method_313(var1, var8)) {
+@@ -16303,7 +16742,7 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+     // $VF: renamed from: g () boolean
+     private static boolean method_369() {
+-        return (field_338[0] & 1) == 0;
++        return false;  // [port] "NEW!" badge for MORE GAMES; the item is removed (was (field_338[0] & 1) == 0)
+     }
+ 
+     // $VF: renamed from: a (java.io.InputStream) int
+@@ -17607,6 +18046,7 @@ public final class class_9 extends Canvas implements Runnable {
+             byte var10003;
+             byte var10004;
+             byte var10005;
++            class_9 var18;  // [port] declaration lost by decompiler
+             label29: {
+                 this.method_380(this.field_488, (byte)var5, (byte)45, (byte)2);
+                 this.field_489 = var7;
+@@ -17676,6 +18116,10 @@ public final class class_9 extends Canvas implements Runnable {
+     private static void method_407(int var0) {
+         try {
+             field_327 = var0 <= 6 ? method_358("/tips.f", var0) : null;
++            if (var0 == 0 && field_327 != null) {
++                field_327.portDpadKeys = true;  // [port] movement tip: phone keys -> Vita d-pad
++            }
++
+             ByteArrayInputStream var1;
+             int var2 = (var1 = new ByteArrayInputStream(method_362("/tipst.f", 0))).read();
+             var0 %= var2;
+@@ -17687,10 +18131,34 @@ public final class class_9 extends Canvas implements Runnable {
+             field_328 = new byte[var5 - var4];
+             var1.read(field_328);
+             var1.close();
++            portTipKeys(field_328);
+         } catch (Exception var6) {
+         }
+     }
+ 
++    // [port] tip text names the phone's "Back" soft key: same-length swap for the circle glyph
++    // (byte 0x81, see method_410) so the tip's stored lengths stay valid
++    private static void portTipKeys(byte[] var0) {
++        byte[] var1 = new byte[]{34, 66, 97, 99, 107, 34};  // "Back" in quotes
++
++        for (int var2 = 0; var2 + 6 <= var0.length; var2++) {
++            int var3 = 0;
++
++            while (var3 < 6 && var0[var2 + var3] == var1[var3]) {
++                var3++;
++            }
++
++            if (var3 == 6) {
++                var0[var2] = -127;  // 0x81
++                var0[var2 + 1] = 32;
++                var0[var2 + 2] = 66;
++                var0[var2 + 3] = 97;
++                var0[var2 + 4] = 99;
++                var0[var2 + 5] = 107;
++            }
++        }
++    }
++
+     // $VF: renamed from: ct () void
+     private void method_408() {
+         field_326[41].field_92 = 0;
+@@ -17700,9 +18168,9 @@ public final class class_9 extends Canvas implements Runnable {
+         this.field_396 = false;
+         Graphics var3 = this.field_323;
+         this.field_323.setColor(798521);
+-        var3.fillRoundRect(2, 1, 124, 132, 8, 8);
++        var3.fillRoundRect(-OX + 2, 1, SW - 4, 132, 8, 8);  // [port] full-width panel: was (2, 1, 124, 132)
+         var3.setColor(13540096);
+-        var3.drawRoundRect(2, 1, 124, 132, 8, 8);
++        var3.drawRoundRect(-OX + 2, 1, SW - 4, 132, 8, 8);  // [port] was (2, 1, 124, 132)
+         int var4 = 0;
+         boolean var5 = true;
+ 
+@@ -17863,18 +18331,18 @@ public final class class_9 extends Canvas implements Runnable {
+                 label105: {
+                     byte[] var10000;
+                     if (var22 > 32) {
+-                        if (var22 == 64 && var7 != null) {
++                        if (var22 == 64 && var7 != null || var22 >= 128 && var22 < 144) {
++                            // [port] '@' (the phone's * key icon) and bytes 0x80.. are Vita button glyphs
++                            int var24 = var22 == 64 ? 57347 : 57344 + var22 - 128;
+                             if (!var17 && var14) {
+-                                var7.method_60(var1, var2[var10 + var8], var12, var13, 0, 0, 0);
++                                class_8.drawGlyph(var1, var3, var24, var12, var13);
+                             }
+ 
+-                            var12 += method_406(var7, var2[var10 + var8]);
+-                            int var23;
+-                            if ((var23 = method_405(var7, var2[var10 + var8])) > var11) {
+-                                var11 = var23;
++                            var12 += 9 + var3.field_76[1];
++                            if (var22 == 64) {
++                                var10++;
+                             }
+ 
+-                            var10++;
+                             continue;
+                         }
+ 
+@@ -18665,7 +19133,7 @@ public final class class_9 extends Canvas implements Runnable {
+         byte var4;
+         byte var5;
+         label22: {
+-            this.field_323.setClip(0, 0, 128, 160);
++            this.field_323.setClip(-OX, 0, SW, 160);
+             var1 = 0;
+             var2 = 0;
+             var3 = 0;
+@@ -18702,21 +19170,29 @@ public final class class_9 extends Canvas implements Runnable {
+         }
+ 
+         this.field_323.setColor(var1);
+-        this.field_323.fillRect(0, 0, 128, 160);
+-        field_326[var5].method_60(this.field_323, 0, 87, 0, 0, 0, 0);
++        this.field_323.fillRect(-OX, 0, SW, 160);
++        Image banner = portBanner(this.field_205);
++        if (banner != null && banner.getWidth() == SW) {
++            // [port] the banner widened with its own scenery (tools/make_banners_wide.py)
++            this.field_323.drawImage(banner, -OX, 0, 0);
++        } else if (SW > 128) {
++            mirrorExtend(this.field_323, field_326[var5], 0, 87, 0);
++        } else {
++            field_326[var5].method_60(this.field_323, 0, 87, 0, 0, 0, 0);
++        }
+         field_326[41].method_65(this.field_323, field_568[var4], 8, 3, 20);
+         field_518 = field_517.getGraphics();
+         field_518.setColor(var1);
+         field_518.fillRect(0, 0, 119, 89);
+         field_326[23].method_60(field_518, 0, 57, 18, 0, 0, 0);
+-        this.field_323.setClip(0, 0, 128, 160);
++        this.field_323.setClip(-OX, 0, SW, 160);
+         this.field_323.setColor(var2);
+         this.field_323.fillRoundRect(1, 131, 125, 16, 8, 8);
+         this.field_323.setColor(var3);
+         this.field_323.drawRoundRect(1, 131, 125, 16, 8, 8);
+         this.method_181();
+         this.method_180();
+-        field_326[41].method_65(this.field_323, field_568[96], 111, 157, 40);
++        field_326[41].method_65(this.field_323, field_568[96], SW - OX - 17, 157, 40);  // [port] corner: was 111
+         if (field_326[17] != null) {
+             field_326[17].method_60(this.field_323, 12, 5, 135, 0, 0, 0);
+             field_326[17].method_60(this.field_323, 10, 82, 135, 0, 0, 0);
+@@ -19225,13 +19701,13 @@ public final class class_9 extends Canvas implements Runnable {
+                 this.field_561 = true;
+             }
+ 
+-            this.field_323.setClip(0, 0, 128, 160);
++            this.field_323.setClip(-OX, 0, SW, 160);
+             if (this.field_561) {
+                 this.method_143(this.field_323, true);
+                 this.field_323.setColor(0);
+-                this.field_323.fillRect(0, 0, 128, 12);
++                this.field_323.fillRect(-OX, 0, SW, 12);  // [port] was 0..128
+                 this.field_323.setColor(16777215);
+-                this.field_323.drawLine(0, 12, 128, 12);
++                this.field_323.drawLine(-OX, 12, SW - OX, 12);  // [port] was 0..128
+                 method_364(field_326[41], field_568[72], 0);
+                 field_326[41].method_65(this.field_323, field_568[72], 64, 2, 17);
+                 method_433(this.field_323, 3, 23, 122, 66, 4273165, 0);
+@@ -19444,9 +19920,9 @@ public final class class_9 extends Canvas implements Runnable {
+         if (this.field_231 == 2) {
+             Graphics var1 = this.field_323;
+             this.field_323.setColor(0, 0, 0);
+-            var1.fillRect(0, 0, 128, 160);
++            var1.fillRect(-OX, 0, SW, 160);
+             int var2 = 0;
+-            byte var3 = -15;
++            int var3 = -15;  // [port] was byte: wrapped at 135, below the 180 bound
+             int var4 = this.field_564;
+             int var5 = this.field_564;
+             int var7 = 0;
+@@ -19467,8 +19943,8 @@ public final class class_9 extends Canvas implements Runnable {
+ 
+             for (int var8 = 6; var8 > 0; var8--) {
+                 var1.setColor(0);
+-                var1.fillRect(0, var2, 128, var8);
+-                var1.fillRect(0, 160 - var2 - var8, 128, var8);
++                var1.fillRect(-OX, var2, SW, var8);  // [port] was 0..128
++                var1.fillRect(-OX, 160 - var2 - var8, SW, var8);  // [port] was 0..128
+                 var2 += var8 + 1;
+             }
+ 
+@@ -19521,15 +19997,23 @@ public final class class_9 extends Canvas implements Runnable {
+             int var3 = class_8.field_90;
+             int var4 = class_8.field_89;
+             if (this.field_574 == -1) {
+-                this.field_574 = 128 - var4 >> 1;
++                this.field_574 = -OX + (SW - var4 >> 1);  // [port] screen centre: was 128 - var4 >> 1
+             }
+ 
+             if (this.field_575 == -1) {
+                 this.field_575 = 160 - var3 >> 1;
+             }
+ 
+-            this.field_323.setClip(this.field_574 - 6, this.field_575 - 3, var4 + 12, var3 + 6);
+-            method_433(this.field_323, this.field_574 - 6, this.field_575 - 3, var4 + 12, var3 + 6, this.field_576, this.field_577);
++            // [port] while loading, the tip panel spans the screen (text stays centred)
++            int var5 = this.field_574 - 6;
++            int var6 = var4 + 12;
++            if (SW > 128 && field_230 != 1 && field_230 != 2 && var6 < SW - 8) {
++                var5 = -OX + 4;
++                var6 = SW - 8;
++            }
++
++            this.field_323.setClip(var5, this.field_575 - 3, var6, var3 + 6);
++            method_433(this.field_323, var5, this.field_575 - 3, var6, var3 + 6, this.field_576, this.field_577);
+             var1.method_66(this.field_323, this.field_573, this.field_574, this.field_575, 0);
+             var1.field_92 = var2;
+         }
+@@ -19547,7 +20031,13 @@ public final class class_9 extends Canvas implements Runnable {
+         for (int var10 = 0; var10 <= var9.length(); var10++) {
+             int var11 = 10;
+             if (var10 < var9.length()) {
+-                var11 = var9.charAt(var10) & 255;
++                var11 = var9.charAt(var10);
++                if (var11 >= 57344) {
++                    var4 += 9 + var2.field_76[1];  // [port] Vita button glyph
++                    continue;
++                }
++
++                var11 &= 255;
+             }
+ 
+             if (var4 > var1 && var6 != var8) {
