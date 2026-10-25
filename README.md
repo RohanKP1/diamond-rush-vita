@@ -4,9 +4,10 @@ A native PS Vita port of Gameloft's *Diamond Rush* (2006, J2ME). This is not an 
 phone game's code is translated to C++ and runs on a small Java runtime and MIDP layer over SDL2,
 with widescreen, Vita controls and on-screen Vita buttons.
 
-> **Bring your own game.** This repository contains no part of Diamond Rush: no game code, art or
-> sound, and no ready-made `.vpk`. You build the `.vpk` yourself from your own copy of the game's
-> `.jar`. Please don't share the `.vpk` you build, since it contains Gameloft's game.
+> **Bring your own game.** This repository contains no game code or sound and no ready-made
+> `.vpk`: you build the `.vpk` yourself from your own copy of the game's `.jar`. The port's artwork
+> (widescreen title, world banners, LiveArea images, in `port/res` and `port/sce_sys`) is derived
+> from the game's art. Please don't share the `.vpk` you build, since it contains Gameloft's game.
 
 ## Features
 
@@ -17,8 +18,7 @@ with widescreen, Vita controls and on-screen Vita buttons.
 - **Faithful audio:** the game's MIDI music and effects, pre-rendered when you build, played with
   the phone's timing.
 - A HUD laid out for the wide screen, cutscene text in the top-left corner, a blurred main-menu
-  backdrop, a widened title screen and world banners. The last two are generated from your copy
-  of the game (see "Extra artwork" below).
+  backdrop, a widened title screen and world banners (see "Artwork" below).
 - Native speed on the Vita, and saves in `ux0:data/diamondrush/`.
 
 ## Controls
@@ -73,19 +73,19 @@ You need a Vita with HENkaku / Ensō and VitaShell.
 - `wsl ./build.sh run-desktop` runs a desktop build in a window. Keys: arrows; Z / Enter / Space
   = action; X / Esc = back; A = left soft key; S = `*`; D = `#`.
 
-## Extra artwork (optional)
+## Artwork
 
-Your build works without these. With them, the title screen, world-map banners and LiveArea look
-like the screenshots. They're made from your copy of the game, so they aren't in the repository:
+The widescreen title, the world-map banners and the LiveArea images are in the repository
+(`port/res`, `port/sce_sys`) and the build uses them as they are: it generates none of them, and
+stops if one is missing or a LiveArea image isn't an 8-bit palette PNG (the Vita refuses to
+install it otherwise). To remake them:
 
 - `tools/make_title_art.py`: the widescreen title background, from a capture of the phone's
   title painting (`port/art/title_phone.png`) and a 16:9 painting of the title screen
   (`title_screen.png`). It also makes the LiveArea background and start image.
 - `tools/extract-banners.py` then `tools/make_banners_wide.py`: the widened world-map banners.
 - `tools/make_livearea.py`: LiveArea images from a title-screen screenshot.
-
-Without them the game falls back to a blurred title backdrop and mirrored banners, and the
-LiveArea uses the game's own icon (`tools/make_default_livearea.py`, run automatically).
+- `tools/make_default_livearea.py`: basic LiveArea images from the jar's icon.
 
 ## How it works
 

@@ -4,11 +4,8 @@
 /java-src/
 /decompiled/
 /port/src/game/gen/
-# artwork derived from the game (made locally by the tools in tools/)
-/port/art/
-/port/res/port_title_wide.png
-/port/res/port_banner_*.png
-/port/sce_sys/
+# source paintings for tools/make_title_art.py (its outputs, in port/res and port/sce_sys, are
+# committed)
 /title_screen.png
 /startup.png
 

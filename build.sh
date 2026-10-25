@@ -20,19 +20,24 @@ resources() {
 
 vita() {
   resources
-  # LiveArea images: basic ones from the jar's icon unless port/sce_sys already has some
-  [ -f port/sce_sys/icon0.png ] || python3 -I tools/make_default_livearea.py jar port/sce_sys
-  # the Vita refuses to install (VitaShell error 0x8010113D) if any of them isn't an 8-bit
-  # palette PNG: convert ones made elsewhere
-  python3 -I - port/sce_sys <<'EOF'
-import sys, pathlib
+  # The artwork is the repository's own (port/res, port/sce_sys), used as is: nothing is generated
+  # here. Check it is all there, and that the LiveArea images are 8-bit palette PNGs (otherwise
+  # the Vita refuses to install: VitaShell error 0x8010113D).
+  python3 -I - <<'EOF'
+import sys
 from PIL import Image
-for p in sorted(pathlib.Path(sys.argv[1]).rglob("*.png")):
-    im = Image.open(p)
-    if im.mode != "P":
-        im.convert("RGB").quantize(colors=255, method=Image.Quantize.MEDIANCUT,
-                                   dither=Image.Dither.NONE).save(p)
-        print(f"{p}: {im.mode} -> 8-bit palette")
+bad = []
+for p in ["port/res/port_title_wide.png", "port/res/port_btn.png"] + \
+         [f"port/res/port_banner_{i}.png" for i in range(3)] + \
+         ["port/sce_sys/icon0.png", "port/sce_sys/livearea/contents/bg.png",
+          "port/sce_sys/livearea/contents/startup.png"]:
+    try:
+        if p.startswith("port/sce_sys/") and Image.open(p).mode != "P":
+            bad.append(f"{p}: not an 8-bit palette PNG")
+    except FileNotFoundError:
+        bad.append(f"{p}: missing")
+if bad:
+    sys.exit("artwork:\n  " + "\n  ".join(bad))
 EOF
   cmake -S port -B "$BUILD/vita" -G Ninja -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_TOOLCHAIN_FILE="$VITASDK/share/vita.toolchain.cmake"
